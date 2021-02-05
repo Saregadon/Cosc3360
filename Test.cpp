@@ -1,10 +1,16 @@
 #include <iostream>
+#include <string>
 
 using namespace std;
 
 int main()
 {
-    cout << "Hello World." << endl;
+    string keyword, argument;
+
+    while(cin >> keyword >> argument)
+    {
+        cout << keyword << argument << endl;
+    }
 
     return 0;
 }
