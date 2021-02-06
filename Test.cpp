@@ -1,4 +1,4 @@
-//Christian Schuering
+//Christian Schuering - Assignment 1
 //PSID 1932884
 
 //Program evaluates job queues and implements a FIFO basis of a waiting list for jobs
@@ -9,7 +9,12 @@
 
 using namespace std;
 
-void core_request(string how_long, string jobID, bool &core, queue <string> jobqueue)
+struct job
+{
+    int jobID;
+};
+
+void core_request(string how_long, int jobID, queue<job> jobqueue, bool &core)
 {
     if(core == true) //true == free
     {
@@ -24,7 +29,7 @@ void core_request(string how_long, string jobID, bool &core, queue <string> jobq
 } //core_request
 
 //change to int to return completion time?
-void core_release(string jobID, bool &core, queue <string> Rqueue, int &completion)
+void core_release(int how_long, int jobID, queue<job> Rqueue, int &completion, bool &core)
 {
     if(!Rqueue.empty())
     {
@@ -38,7 +43,7 @@ void core_release(string jobID, bool &core, queue <string> Rqueue, int &completi
     //process next job request for job jobID
 } //core_release
 
-void disk_request(int how_long, queue <string> Dqueue, string jobID, int &completion, bool &disk)
+void disk_request(int how_long, queue<job> Dqueue, int jobID, int &completion, bool &disk)
 {
     if(how_long == 0)
     {
@@ -56,7 +61,7 @@ void disk_request(int how_long, queue <string> Dqueue, string jobID, int &comple
     }
 } // disk_request
 
-void disk_completion(int how_long, string jobID, queue <string> Dqueue, int &completion, bool &disk)
+void disk_completion(int how_long, int jobID, queue<job> Dqueue, int &completion, bool &disk)
 {
     if(!Dqueue.empty())
     {
@@ -70,7 +75,7 @@ void disk_completion(int how_long, string jobID, queue <string> Dqueue, int &com
     //process next job request for job jobID
 } //disk_completion
 
-void spooler_request(int how_long, string jobID, queue <string> Squeue, int &completion, bool &disk)
+void spooler_request(int how_long, int jobID, queue<job> Squeue, int &completion, bool &disk)
 {
     if(disk == true) //true == free //should be spooler bool?
     {
@@ -84,7 +89,7 @@ void spooler_request(int how_long, string jobID, queue <string> Squeue, int &com
     }
 } //spooler_request
 
-void spooler_release(int how_long, string jobID, queue <string> Squeue, int &completion, bool &spooler)
+void spooler_release(int how_long, int jobID, queue<job> Squeue, int &completion, bool &spooler)
 {
     if(!Squeue.empty())
     {
@@ -100,6 +105,10 @@ void spooler_release(int how_long, string jobID, queue <string> Squeue, int &com
 
 int main()
 {
+    //array holds core, disk and spooler;
+    //array[core, disk, spooler]
+    job cores[] = new job*[3];
+
     string keyword, argument;
 
     while(cin >> keyword >> argument)
