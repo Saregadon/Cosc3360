@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
-#include <vector>
+#include <queue>
 
 using namespace std;
 
-void core_request(string how_long, string jobID, bool &core, vector <string> jobqueue)
+void core_request(string how_long, string jobID, bool &core, queue <string> jobqueue)
 {
     if(core == true) //true == free
     {
@@ -19,12 +19,12 @@ void core_request(string how_long, string jobID, bool &core, vector <string> job
 } //core_request
 
 //change to int to return completion time?
-void core_release(string jobID, bool &core, vector <string> Rqueue, int &completion)
+void core_release(string jobID, bool &core, queue <string> Rqueue, int &completion)
 {
     if(!Rqueue.empty())
     {
         //Rqueue.pop_back().front();
-        //completion = current_time + how_long;
+        //completion = current_time + how_long; //how_long == jobID
     }
     else
     {
@@ -33,7 +33,7 @@ void core_release(string jobID, bool &core, vector <string> Rqueue, int &complet
     //process next job request for job jobID
 } //core_release
 
-void disk_request(int how_long, vector<string> Dqueue, string jobID, bool &disk)
+void disk_request(int how_long, queue <string> Dqueue, string jobID, int &completion, bool &disk)
 {
     if(how_long == 0)
     {
@@ -43,20 +43,20 @@ void disk_request(int how_long, vector<string> Dqueue, string jobID, bool &disk)
     {
         disk = false; //false == busy
         //schedule DISK completion event at time
-        //current_time + how_long for job jobID
+        //completion = current_time + how_long for job jobID
     }
     else
     {
-        //diskqueue.push_back(jobID) in diskQueue
+        //Dqueue.push_back(jobID) in diskQueue
     }
 } // disk_request
 
-void disk_completion(int how_long, string jobID, vector<string> Dqueue, int &completion, bool &disk)
+void disk_completion(int how_long, string jobID, queue <string> Dqueue, int &completion, bool &disk)
 {
     if(!Dqueue.empty())
     {
         //Dqueue.pop_back()
-        //completion = current_time + how_long;
+        //completion = current_time + how_long; //how_long == jobID
     }
     else
     {
@@ -64,6 +64,34 @@ void disk_completion(int how_long, string jobID, vector<string> Dqueue, int &com
     }
     //process next job request for job jobID
 } //disk_completion
+
+void spooler_request(int how_long, string jobID, queue <string> Squeue, int &completion, bool &disk)
+{
+    if(disk == true) //true == free //should be spooler bool?
+    {
+        disk = false;
+        //schedule SPOOLER completion event at time
+        //completion = current_time + how_long; //how_long == jobID
+    }
+    else
+    {
+        //Squeue.push(jobID);
+    }
+} //spooler_request
+
+void spooler_release(int how_long, string jobID, queue <string> Squeue, int &completion, bool &spooler)
+{
+    if(!Squeue.empty())
+    {
+        Squeue.pop();
+        //completion = current_time + how_long;
+    }
+    else
+    {
+        spooler = true;
+    }
+    //process next job request for job jobID
+} //spooler_release
 
 int main()
 {
