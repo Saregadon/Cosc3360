@@ -1,3 +1,8 @@
+//Christian Schuering
+//PSID 1932884
+
+//Program evaluates job queues and implements a FIFO basis of a waiting list for jobs
+
 #include <iostream>
 #include <string>
 #include <queue>
