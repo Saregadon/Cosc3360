@@ -33,6 +33,24 @@ void core_release(string jobID, bool &core, vector <string> Rqueue, int &complet
     //process next job request for job jobID
 } //core_release
 
+void disk_request(int how_long, vector<string> diskqueue, string jobID, bool &disk)
+{
+    if(how_long == 0)
+    {
+        //perform next job request
+    }
+    else if(disk == true) //true == free
+    {
+        disk = false; //false == busy
+        //schedule DISK completion event at time
+        //current_time + how_long for job jobID
+    }
+    else
+    {
+        //diskqueue.push_back(jobID) in diskQueue
+    }
+} // disk_request
+
 int main()
 {
     string keyword, argument;
@@ -41,8 +59,6 @@ int main()
     {
         cout << keyword << argument << endl;
     }
-
-
 
     return 0;
 }
