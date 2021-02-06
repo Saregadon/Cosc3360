@@ -33,7 +33,7 @@ void core_release(string jobID, bool &core, vector <string> Rqueue, int &complet
     //process next job request for job jobID
 } //core_release
 
-void disk_request(int how_long, vector<string> diskqueue, string jobID, bool &disk)
+void disk_request(int how_long, vector<string> Dqueue, string jobID, bool &disk)
 {
     if(how_long == 0)
     {
@@ -50,6 +50,20 @@ void disk_request(int how_long, vector<string> diskqueue, string jobID, bool &di
         //diskqueue.push_back(jobID) in diskQueue
     }
 } // disk_request
+
+void disk_completion(int how_long, string jobID, vector<string> Dqueue, int &completion, bool &disk)
+{
+    if(!Dqueue.empty())
+    {
+        //Dqueue.pop_back()
+        //completion = current_time + how_long;
+    }
+    else
+    {
+        disk = true;
+    }
+    //process next job request for job jobID
+} //disk_completion
 
 int main()
 {
