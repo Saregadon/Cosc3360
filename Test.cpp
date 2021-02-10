@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <queue>
+#include <new>
 
 using namespace std;
 
@@ -107,14 +108,21 @@ int main()
 {
     //array holds core, disk and spooler;
     //array[core, disk, spooler]
-    job cores[] = new job*[3];
-
     string keyword, argument;
+
+    int k, a;
+    int * kstorage, * astorage; //storing of keyword and arguments into lists
+
+    kstorage = new (nothrow) int[k]; //dynamic array storing of keyword (k)
+    astorage = new (nothrow) int[a]; //dynamic array storing of keyword (a)
 
     while(cin >> keyword >> argument)
     {
         cout << keyword << argument << endl;
+
     }
+
+
 
     return 0;
 }
