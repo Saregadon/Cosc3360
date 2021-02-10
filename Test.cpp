@@ -45,10 +45,11 @@ void deletenode(node* head, node* temp) //head and temp = head->next->next (put 
             cout << "Can't transfer nullptr to next node." << endl; return;
         }
 
+        //setting keyword and argument = to the next nodes in the list;
         head->k = head->next->k;
         head->a = head->next->a;
 
-        //store address of next node
+        //store address of next node inside of temp variable for deletion
         temp = head->next;
 
         //quite literally delete temp
@@ -63,6 +64,7 @@ void deletenode(node* head, node* temp) //head and temp = head->next->next (put 
         cout << "Can't delete nullptr previous node" << endl; return;
     }
 
+    //provide the next variable behind the head node to delete the previous node
     prev->next = prev->next->next;
 
     delete temp;
@@ -163,6 +165,9 @@ int main()
     //head node is the 0th node when starting
     node* head;
 
+    //linecounter = jobstarting number && linecounter = jobending number
+    linecounter* head;
+
     //array holds core, disk and spooler;
     string keyword;
     int argument;
@@ -173,6 +178,11 @@ int main()
         addnode(head, keyword, argument);
     }
 
+    while(head != nullptr)
+    {
+        //equation start
+    }
+    
     return 0;
 }
 //get timer working
