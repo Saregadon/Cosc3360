@@ -12,6 +12,7 @@ using namespace std;
 
 struct node
 {
+    node* prev;
     node* next;
     string k; //keyword
     int a; //argument
@@ -24,6 +25,41 @@ void addnode(node* head, string keyword, int argument)
     data->a = argument; //adding argument to block [i] of new node
     data->next = head; //setting next node as the head
     head = data; //setting the head to a new nullptr node
+}
+
+//probably just implement doubly linked list
+void deletenode(node* head, node* temp) //head and temp = head->next->next (put in main)
+{
+    if(head == temp)
+    {
+        if(head->next == nullptr)
+        {
+            cout << "Can't transfer nullptr to next node." << endl; return;
+        }
+
+        head->k = head->next->k;
+        head->a = head->next->a;
+
+        //store address of next node
+        temp = head->next;
+
+        //quite literally delete temp
+        delete temp;
+        return;
+    }
+
+    node* prev = head;
+    while(prev->next != nullptr && prev->next != temp) prev = prev->next;
+
+    if(prev->next == nullptr)
+    {
+        cout << "Can't delete nullptr previous node" << endl; return;
+    }
+
+    prev->next = prev->next->next;
+
+    delete temp;
+    return;
 }
 
 struct job
