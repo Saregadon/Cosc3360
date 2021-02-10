@@ -10,6 +10,22 @@
 
 using namespace std;
 
+struct node
+{
+    node* next;
+    string k; //keyword
+    int a; //argument
+};
+
+void addnode(node* head, string keyword, int argument)
+{
+    node* data = new node; //allocating memory for new node
+    data->k = keyword; //adding keyword to block [i] of new node
+    data->a = argument; //adding argument to block [i] of new node
+    data->next = head; //setting next node as the head
+    head = data; //setting the head to a new nullptr node
+}
+
 struct job
 {
     int jobID;
@@ -106,23 +122,18 @@ void spooler_release(int how_long, int jobID, queue<job> Squeue, int &completion
 
 int main()
 {
+    //head node is the 0th node when starting
+    node* head;
+
     //array holds core, disk and spooler;
-    //array[core, disk, spooler]
-    string keyword, argument;
-
-    int k, a;
-    int * kstorage, * astorage; //storing of keyword and arguments into lists
-
-    kstorage = new (nothrow) int[k]; //dynamic array storing of keyword (k)
-    astorage = new (nothrow) int[a]; //dynamic array storing of keyword (a)
+    string keyword;
+    int argument;
 
     while(cin >> keyword >> argument)
     {
         cout << keyword << argument << endl;
-
+        addnode(head, keyword, argument);
     }
-
-
 
     return 0;
 }
