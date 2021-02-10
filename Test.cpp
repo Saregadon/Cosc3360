@@ -18,6 +18,13 @@ struct node
     int a; //argument
 };
 
+struct linecounter
+{
+    linecounter* next;
+    int linestart; //line starts after job #
+    int lineend; //line end ends before next # or end of file
+};
+
 void addnode(node* head, string keyword, int argument)
 {
     node* data = new node; //allocating memory for new node
@@ -30,6 +37,7 @@ void addnode(node* head, string keyword, int argument)
 //probably just implement doubly linked list
 void deletenode(node* head, node* temp) //head and temp = head->next->next (put in main)
 {
+    node* prev = head;
     if(head == temp)
     {
         if(head->next == nullptr)
@@ -48,7 +56,6 @@ void deletenode(node* head, node* temp) //head and temp = head->next->next (put 
         return;
     }
 
-    node* prev = head;
     while(prev->next != nullptr && prev->next != temp) prev = prev->next;
 
     if(prev->next == nullptr)
@@ -61,11 +68,6 @@ void deletenode(node* head, node* temp) //head and temp = head->next->next (put 
     delete temp;
     return;
 }
-
-struct job
-{
-    int jobID;
-};
 
 void core_request(string how_long, int jobID, queue<job> jobqueue, bool &core)
 {
