@@ -7,6 +7,7 @@
 #include <string>
 #include <queue>
 #include <vector>
+#include <numeric>
 
 using namespace std;
 /* Linked List Implementation
@@ -168,8 +169,10 @@ int main()
     //linecounter = jobstarting number && linecounter = jobending number
     //linecounter* head;
 
-    vector<string> veckeyword;
-    vector<string> vecargument;
+    vector<string> veckeyword; //keyword
+    vector<string> vecargument; //argument
+    vector<string> jobnumber; //iterates anytime a new job is issued
+    vector<string> expectedtimeforjob; //pushes expected time for each new job
 
     //array holds core, disk and spooler;
     string keyword;
@@ -191,6 +194,17 @@ int main()
         cout << veckeyword[i] + " ";
         cout << vecargument[i] + " ";
         cout << endl;
+        if(veckeyword[i] == "JOB") //takes in the job # then iterates through the keywords, adding the arguments up until the next job - giving an expected time completion
+        {
+            int numberhold, j = i++;
+            jobnumber.push_back(vecargument[i]);
+            while(veckeyword[j] != "JOB") 
+            {
+                numberhold = stoi(vecargument[j]);//accumulate(vecargument.begin(), vecargument.end(), 0); 
+                j++;
+            }
+            expectedtimeforjob.push_back(to_string(numberhold));
+        }
     }
     
     return 0;
