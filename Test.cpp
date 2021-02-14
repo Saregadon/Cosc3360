@@ -183,9 +183,10 @@ int main()
         vecargument.push_back(argument);
     }
 
+    cout << "/////////////////////////////////////" << endl;
+
     for(int i = 0; i < veckeyword.size(); i++)
     {
-        cout << "/////////////////////////////////////" << endl;
         //equation start
         cout << veckeyword[i] + " ";
         cout << vecargument[i] + " ";
