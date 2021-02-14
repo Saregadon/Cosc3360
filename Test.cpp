@@ -7,7 +7,6 @@
 #include <string>
 #include <queue>
 #include <vector>
-#include <new>
 
 using namespace std;
 /* Linked List Implementation
@@ -72,7 +71,7 @@ void deletenode(node* head, node* temp) //head and temp = head->next->next (put 
     return;
 }
 */
-void core_request(string how_long, int jobID, queue<job> jobqueue, bool &core)
+void core_request(string how_long, int jobID, vector<int> jobqueue, bool &core)
 {
     if(core == true) //true == free
     {
@@ -87,7 +86,7 @@ void core_request(string how_long, int jobID, queue<job> jobqueue, bool &core)
 } //core_request
 
 //change to int to return completion time?
-void core_release(int how_long, int jobID, queue<job> Rqueue, int &completion, bool &core)
+void core_release(int how_long, int jobID, vector<int> Rqueue, int &completion, bool &core)
 {
     if(!Rqueue.empty())
     {
@@ -101,7 +100,7 @@ void core_release(int how_long, int jobID, queue<job> Rqueue, int &completion, b
     //process next job request for job jobID
 } //core_release
 
-void disk_request(int how_long, queue<job> Dqueue, int jobID, int &completion, bool &disk)
+void disk_request(int how_long, vector<int> Dqueue, int jobID, int &completion, bool &disk)
 {
     if(how_long == 0)
     {
@@ -119,7 +118,7 @@ void disk_request(int how_long, queue<job> Dqueue, int jobID, int &completion, b
     }
 } // disk_request
 
-void disk_completion(int how_long, int jobID, queue<job> Dqueue, int &completion, bool &disk)
+void disk_completion(int how_long, int jobID, vector<int> Dqueue, int &completion, bool &disk)
 {
     if(!Dqueue.empty())
     {
@@ -133,7 +132,7 @@ void disk_completion(int how_long, int jobID, queue<job> Dqueue, int &completion
     //process next job request for job jobID
 } //disk_completion
 
-void spooler_request(int how_long, int jobID, queue<job> Squeue, int &completion, bool &disk)
+void spooler_request(int how_long, int jobID, vector<int> Squeue, int &completion, bool &disk)
 {
     if(disk == true) //true == free //should be spooler bool?
     {
@@ -147,11 +146,11 @@ void spooler_request(int how_long, int jobID, queue<job> Squeue, int &completion
     }
 } //spooler_request
 
-void spooler_release(int how_long, int jobID, queue<job> Squeue, int &completion, bool &spooler)
+void spooler_release(int how_long, int jobID, vector<int> Squeue, int &completion, bool &spooler)
 {
     if(!Squeue.empty())
     {
-        Squeue.pop();
+        Squeue.pop_back();
         //completion = current_time + how_long;
     }
     else
@@ -186,9 +185,11 @@ int main()
 
     for(int i = 0; i < veckeyword.size(); i++)
     {
+        cout << "/////////////////////////////////////" << endl;
         //equation start
         cout << veckeyword[i] + " ";
         cout << vecargument[i] + " ";
+        cout << endl;
     }
     
     return 0;
