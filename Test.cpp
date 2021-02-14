@@ -169,11 +169,11 @@ int main()
     //linecounter* head;
 
     vector<string> veckeyword;
-    vector<int> vecargument;
+    vector<string> vecargument;
 
     //array holds core, disk and spooler;
     string keyword;
-    int argument;
+    string argument;
 
     while(cin >> keyword >> argument)
     {
