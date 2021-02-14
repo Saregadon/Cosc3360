@@ -202,3 +202,4 @@ int main()
 //number of jobs that have been completed - 
 //total number of disc requests - 
 //cpu utilization, fraction of time device was busy between 0 and 1 -
+//must use strings, manipulate when changing to ints then change back to strings for final output
