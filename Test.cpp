@@ -194,16 +194,16 @@ int main()
         cout << veckeyword[i] + " ";
         cout << vecargument[i] + " ";
         cout << endl;
-        if(veckeyword[i] == "JOB") //takes in the job # then iterates through the keywords, adding the arguments up until the next job - giving an expected time completion
+        if(veckeyword[i] == "JOB") //takes in the job #
         {
             int numberhold, j = i++;
             jobnumber.push_back(vecargument[i]);
-            while(veckeyword[j] != "JOB") 
+            while(veckeyword[j] != "JOB") // then iterates through the keywords,
             {
-                numberhold = stoi(vecargument[j]);//accumulate(vecargument.begin(), vecargument.end(), 0); 
+                numberhold = stoi(vecargument[j]); //adding the arguments up until the next job
                 j++;
             }
-            expectedtimeforjob.push_back(to_string(numberhold));
+            expectedtimeforjob.push_back(to_string(numberhold)); //giving an expected time completion
         }
     }
     
