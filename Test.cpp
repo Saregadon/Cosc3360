@@ -6,10 +6,11 @@
 #include <iostream>
 #include <string>
 #include <queue>
+#include <vector>
 #include <new>
 
 using namespace std;
-
+/* Linked List Implementation
 struct node
 {
     node* prev;
@@ -70,7 +71,7 @@ void deletenode(node* head, node* temp) //head and temp = head->next->next (put 
     delete temp;
     return;
 }
-
+*/
 void core_request(string how_long, int jobID, queue<job> jobqueue, bool &core)
 {
     if(core == true) //true == free
@@ -163,10 +164,13 @@ void spooler_release(int how_long, int jobID, queue<job> Squeue, int &completion
 int main()
 {
     //head node is the 0th node when starting
-    node* head;
+    //node* head;
 
     //linecounter = jobstarting number && linecounter = jobending number
-    linecounter* head;
+    //linecounter* head;
+
+    vector<string> veckeyword;
+    vector<int> vecargument;
 
     //array holds core, disk and spooler;
     string keyword;
@@ -175,12 +179,16 @@ int main()
     while(cin >> keyword >> argument)
     {
         cout << keyword << argument << endl;
-        addnode(head, keyword, argument);
+        //addnode(head, keyword, argument);
+        veckeyword.push_back(keyword);
+        vecargument.push_back(argument);
     }
 
-    while(head != nullptr)
+    for(int i = 0; i < veckeyword.size(); i++)
     {
         //equation start
+        cout << veckeyword[i] + " ";
+        cout << vecargument[i] + " ";
     }
     
     return 0;
