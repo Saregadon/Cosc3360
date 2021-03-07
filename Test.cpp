@@ -147,13 +147,13 @@ int main()
         if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
         {
             jobnumber.push_back(vecargument[keyword_iteration]);
-            int numberhold = 0, correctoutput = 0, inside_loop_iteration = keyword_iteration;
-            while(veckeyword[inside_loop_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
+            int numberhold = 0, correctoutput = 0, time_complexity_iteration = keyword_iteration;
+            while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
             {
-                numberhold = stoi(vecargument[inside_loop_iteration]); //adding the arguments up until the next job
+                numberhold = stoi(vecargument[time_complexity_iteration]); //adding the arguments up until the next job
                 correctoutput += numberhold;
-                inside_loop_iteration++;
-                if(veckeyword[inside_loop_iteration] == "JOB")
+                time_complexity_iteration++;
+                if(veckeyword[time_complexity_iteration] == "JOB")
                 {
                     string correction = to_string(correctoutput);
                     expectedtimeforjob.push_back(correction); //giving an expected time completion for each new job
