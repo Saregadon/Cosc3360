@@ -100,9 +100,24 @@ void spooler_release(int how_long, int jobID, vector<int> Squeue, int &completio
     //process next job request for job jobID
 } //spooler_release
 
-void print()
+void print(vector<string> expectedtimeforjob, int i, int diskcounter, float coreutilization) //i poses as the job number
 {
+    cout << "Job " << i << " terminates at time " << expectedtimeforjob[i] << endl;
+    cout << "Job Table:" << endl;
+    if(false) //must find out how to see if job is completed or not for function.
+    {
 
+    }
+    else //if job is completed
+    {
+        cout << "There are no active jobs" << endl;
+    }
+
+    cout << "SUMMARY:" << endl;
+    cout << "Totaly elapsed time: " << expectedtimeforjob[i] << "ms" << endl;
+    cout << "Total number of disk access: " << diskcounter << endl;
+    cout << "Core utilization: " << coreutilization << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
+                                    //maybe just use (float coresadded = coreutilization/expectedtimeforjob[i];)
 }
 
 string timeequation() //possibly set = vector and have it push_back the function
