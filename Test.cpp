@@ -106,7 +106,7 @@ void print(vector<string> expectedtimeforjob, int i, int diskcounter, float core
     cout << "Job Table:" << endl;
     if(false) //must find out how to see if job is completed or not for function.
     {
-
+        cout << "Job " << i /*change to job that is active*/ << " is RUNNING" << endl;
     }
     else //if job is completed
     {
