@@ -194,6 +194,7 @@ int main()
         cout << veckeyword[i] + " ";
         cout << vecargument[i] + " ";
         cout << endl;
+
         if(veckeyword[i] == "JOB") //takes in the job #
         {
 
@@ -201,11 +202,8 @@ int main()
             jobnumber.push_back(vecargument[i]);
             while(veckeyword[j] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
             {
-                numberhold = stoi(vecargument[j]); //adding the arguments up until the next job
+                numberhold += stoi(vecargument[j]); //adding the arguments up until the next job
                 j++;
-
-                if(veckeyword[j] == "JOB") 
-                    break;
             }
             expectedtimeforjob.push_back(to_string(numberhold)); //giving an expected time completion for each new job
         }
