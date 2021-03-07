@@ -198,7 +198,7 @@ int main()
         if(veckeyword[i] == "JOB") //takes in the job #
         {
             jobnumber.push_back(vecargument[i]);
-            int numberhold = 0, j = i++;
+            int numberhold = 0, j = i;
             while(veckeyword[j] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
             {
                 numberhold += stoi(vecargument[j]); //adding the arguments up until the next job
