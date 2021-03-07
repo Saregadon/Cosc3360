@@ -204,8 +204,11 @@ int main()
                 numberhold = stoi(vecargument[j]); //adding the arguments up until the next job
                 correctoutput += numberhold;
                 j++;
+                if(veckeyword[j] == "JOB")
+                {
+                    expectedtimeforjob.push_back(to_string(correctoutput)); //giving an expected time completion for each new job
+                }
             }
-            expectedtimeforjob.push_back(to_string(correctoutput)); //giving an expected time completion for each new job
         }
         else if(veckeyword[i] == "CORE")
         {
