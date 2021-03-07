@@ -210,18 +210,6 @@ int main()
                 }
             }
         }
-        else if(veckeyword[i] == "CORE")
-        {
-
-        }
-        else if(veckeyword[i] == "PRINT")
-        {
-
-        }
-        else if(veckeyword[i] == "DISK")
-        {
-
-        }
     }
     
     for(int i = 0; i < expectedtimeforjob.size(); i++)
@@ -230,7 +218,7 @@ int main()
     }
     cout << endl;
 
-    for(int i = 0; i < jobnumber[i].size(); i++)
+    for(int i = 0; i < jobnumber.size(); i++)
     {
         cout << jobnumber[i] << " ";
     }
