@@ -105,7 +105,7 @@ void print()
 
 }
 
-void timeequation()
+string timeequation() //possibly set = vector and have it push_back the function
 {
 
 }
@@ -168,7 +168,7 @@ int main()
     
     cout << endl;
 
-    for(int i = 0; i < jobnumber.size(); i++)
+    for(int i = 0; i < jobnumber.size(); i++) //expectedtimeforjob[i] causes segmentation fault, should be same size as jobnumber though?
     {
         cout << jobnumber[i] << " " << expectedtimeforjob[i] << " ";
     }
