@@ -191,17 +191,21 @@ int main()
     for(int i = 0; i < veckeyword.size(); i++)
     {
         //equation start
-        cout << veckeyword[i] + " ";
-        cout << vecargument[i] + " ";
-        cout << endl;
+        //cout << veckeyword[i] + " ";
+        //cout << vecargument[i] + " ";
+        //cout << endl;
         if(veckeyword[i] == "JOB") //takes in the job #
         {
-            int numberhold, j = i++;
+
+            int numberhold = 0, j = i++;
             jobnumber.push_back(vecargument[i]);
             while(veckeyword[j] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
             {
                 numberhold = stoi(vecargument[j]); //adding the arguments up until the next job
                 j++;
+
+                if(veckeyword[j] == "JOB") 
+                    break;
             }
             expectedtimeforjob.push_back(to_string(numberhold)); //giving an expected time completion for each new job
         }
@@ -222,6 +226,11 @@ int main()
     for(int i = 0; i < expectedtimeforjob.size(); i++)
     {
         cout << expectedtimeforjob[i] << " ";
+    }
+
+    for(int i = 0; i < jobnumber[i].size(); i++)
+    {
+        cout << jobnumber[i] << " ";
     }
 
     return 0;
