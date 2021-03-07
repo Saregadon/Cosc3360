@@ -180,7 +180,7 @@ int main()
 
     while(cin >> keyword >> argument)
     {
-        cout << keyword << argument << endl;
+        //cout << keyword << argument << endl;
         //addnode(head, keyword, argument);
         veckeyword.push_back(keyword);
         vecargument.push_back(argument);
@@ -191,9 +191,9 @@ int main()
     for(int i = 0; i < veckeyword.size(); i++)
     {
         //equation start
-        //cout << veckeyword[i] + " ";
-        //cout << vecargument[i] + " ";
-        //cout << endl;
+        cout << veckeyword[i] + " ";
+        cout << vecargument[i] + " ";
+        cout << endl;
         if(veckeyword[i] == "JOB") //takes in the job #
         {
 
