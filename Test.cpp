@@ -225,11 +225,13 @@ int main()
     {
         cout << expectedtimeforjob[i] << " ";
     }
+    cout << endl;
 
     for(int i = 0; i < jobnumber[i].size(); i++)
     {
         cout << jobnumber[i] << " ";
     }
+    cout << endl;
 
     return 0;
 }
