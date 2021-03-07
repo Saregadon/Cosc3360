@@ -100,6 +100,16 @@ void spooler_release(int how_long, int jobID, vector<int> Squeue, int &completio
     //process next job request for job jobID
 } //spooler_release
 
+void print()
+{
+
+}
+
+void timeequation()
+{
+
+}
+
 int main()
 {
     //head node is the 0th node when starting
@@ -145,9 +155,14 @@ int main()
                 j++;
                 if(veckeyword[j] == "JOB")
                 {
-                    expectedtimeforjob.push_back(to_string(correctoutput)); //giving an expected time completion for each new job
+                    string correction = to_string(correctoutput);
+                    expectedtimeforjob.push_back(correction); //giving an expected time completion for each new job
                 }
             }
+        }
+        else if(veckeyword[i] == "PRINT")
+        {
+
         }
     }
     
