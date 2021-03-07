@@ -198,15 +198,32 @@ int main()
         {
             int numberhold, j = i++;
             jobnumber.push_back(vecargument[i]);
-            while(veckeyword[j] != "JOB") // then iterates through the keywords,
+            while(veckeyword[j] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
             {
                 numberhold = stoi(vecargument[j]); //adding the arguments up until the next job
                 j++;
             }
-            expectedtimeforjob.push_back(to_string(numberhold)); //giving an expected time completion
+            expectedtimeforjob.push_back(to_string(numberhold)); //giving an expected time completion for each new job
+        }
+        else if(veckeyword[i] == "CORE")
+        {
+
+        }
+        else if(veckeyword[i] == "PRINT")
+        {
+
+        }
+        else if(veckeyword[i] == "DISK")
+        {
+
         }
     }
     
+    for(int i = 0; i < expectedtimeforjob.size(); i++)
+    {
+        cout << expectedtimeforjob[i] << " ";
+    }
+
     return 0;
 }
 //get timer working
