@@ -198,13 +198,14 @@ int main()
         if(veckeyword[i] == "JOB") //takes in the job #
         {
             jobnumber.push_back(vecargument[i]);
-            int numberhold = 0, j = i;
+            int numberhold = 0, correctoutput = 0, j = i;
             while(veckeyword[j] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
             {
-                numberhold += stoi(vecargument[j]); //adding the arguments up until the next job
+                numberhold = stoi(vecargument[j]); //adding the arguments up until the next job
+                correctoutput += numberhold;
                 j++;
             }
-            expectedtimeforjob.push_back(to_string(numberhold)); //giving an expected time completion for each new job
+            expectedtimeforjob.push_back(to_string(correctoutput)); //giving an expected time completion for each new job
         }
         else if(veckeyword[i] == "CORE")
         {
