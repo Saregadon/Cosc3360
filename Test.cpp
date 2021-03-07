@@ -137,44 +137,40 @@ int main()
 
     cout << "/////////////////////////////////////" << endl;
 
-    for(int i = 0; i < veckeyword.size(); i++)
+    for(int keyword_iteration = 0; keyword_iteration < veckeyword.size(); keyword_iteration++) //keyword_iteration == i
     {
         //equation start
-        cout << veckeyword[i] + " ";
-        cout << vecargument[i] + " ";
+        cout << veckeyword[keyword_iteration] + " ";
+        cout << vecargument[keyword_iteration] + " ";
         cout << endl;
         
-        if(veckeyword[i] == "JOB") //takes in the job #
+        if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
         {
-            jobnumber.push_back(vecargument[i]);
-            int numberhold = 0, correctoutput = 0, j = i;
-            while(veckeyword[j] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
+            jobnumber.push_back(vecargument[keyword_iteration]);
+            int numberhold = 0, correctoutput = 0, inside_loop_iteration = keyword_iteration;
+            while(veckeyword[inside_loop_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
             {
-                numberhold = stoi(vecargument[j]); //adding the arguments up until the next job
+                numberhold = stoi(vecargument[inside_loop_iteration]); //adding the arguments up until the next job
                 correctoutput += numberhold;
-                j++;
-                if(veckeyword[j] == "JOB")
+                inside_loop_iteration++;
+                if(veckeyword[inside_loop_iteration] == "JOB")
                 {
                     string correction = to_string(correctoutput);
                     expectedtimeforjob.push_back(correction); //giving an expected time completion for each new job
                 }
             }
         }
-        else if(veckeyword[i] == "PRINT")
+        else if(veckeyword[keyword_iteration] == "PRINT")
         {
 
         }
     }
     
-    for(int i = 0; i < expectedtimeforjob.size(); i++)
-    {
-        cout << expectedtimeforjob[i] << " ";
-    }
     cout << endl;
 
     for(int i = 0; i < jobnumber.size(); i++)
     {
-        cout << jobnumber[i] << " ";
+        cout << jobnumber[i] << " " << expectedtimeforjob[i] << " ";
     }
     cout << endl;
 
