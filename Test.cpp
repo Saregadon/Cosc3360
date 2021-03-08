@@ -86,12 +86,12 @@ void spooler_request(int how_long, int jobID, vector<int> Squeue, int &completio
     }
 } //spooler_request
 
-void spooler_release(int how_long, int jobID, vector<int> Squeue, int &completion, bool &spooler)
+void spooler_release(int how_long, int jobID, vector<int> Squeue, bool &spooler, int &current_time)
 {
     if(!Squeue.empty())
     {
         Squeue.pop_back();
-        completion = current_time + how_long;
+        current_time = current_time + how_long;
     }
     else
     {
