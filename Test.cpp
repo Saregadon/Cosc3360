@@ -162,15 +162,14 @@ int main()
         if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
         {
             jobnumber.push_back(vecargument[keyword_iteration]);
-            int numberhold = 0, correctoutput = 0, time_complexity_iteration = keyword_iteration;
+            int numberhold = 0, time_complexity_iteration = keyword_iteration;
             while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
             {
-                numberhold = stoi(vecargument[time_complexity_iteration]); //adding the arguments up until the next job
-                correctoutput += numberhold;
+                numberhold += stoi(vecargument[time_complexity_iteration]); //adding the arguments up until the next job
                 time_complexity_iteration++;
                 if(veckeyword[time_complexity_iteration] == "JOB")
                 {
-                    string correction = to_string(correctoutput);
+                    string correction = to_string(numberhold);
                     expectedtimeforjob.push_back(correction); //giving an expected time completion for each new job
                 }
             }
@@ -185,7 +184,7 @@ int main()
 
     for(int i = 0; i < jobnumber.size(); i++) //expectedtimeforjob[i] causes segmentation fault, should be same size as jobnumber though?
     {
-        cout << jobnumber[i] << " " << expectedtimeforjob[i] << " ";
+        cout << jobnumber[i] << " ";// << expectedtimeforjob[i] << " ";
     }
     cout << endl;
 
