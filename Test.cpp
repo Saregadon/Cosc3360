@@ -188,6 +188,11 @@ int main()
     }
     cout << endl;
 
+    for(int i = 0; i < expectedtimeforjob.size(); i++)
+    {
+        cout << expectedtimeforjob[i] << endl;
+    }
+
     return 0;
 }
 //get timer working
