@@ -169,10 +169,12 @@ int main()
             while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
             {
                 numberhold += stoi(vecargument[time_complexity_iteration]); //adding the arguments up until the next job
+                cout << numberhold << " ";
                 time_complexity_iteration++;
                 if(veckeyword[time_complexity_iteration] == "JOB")
                 {
                     string correction = to_string(numberhold);
+                    cout << correction << " ";
                     expectedtimeforjob.push_back(correction); //giving an expected time completion for each new job
                 }
             }
