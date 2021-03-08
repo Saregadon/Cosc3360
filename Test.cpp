@@ -142,6 +142,9 @@ int main()
     string keyword;
     string argument;
 
+    //counter for expectedtime finish
+    int numberhold = 0;
+
     while(cin >> keyword >> argument)
     {
         //cout << keyword << argument << endl;
@@ -162,7 +165,7 @@ int main()
         if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
         {
             jobnumber.push_back(vecargument[keyword_iteration]);
-            int numberhold = 0, time_complexity_iteration = keyword_iteration;
+            int time_complexity_iteration = keyword_iteration;
             while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
             {
                 numberhold += stoi(vecargument[time_complexity_iteration]); //adding the arguments up until the next job
