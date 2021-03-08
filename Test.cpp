@@ -134,13 +134,13 @@ int main()
     //linecounter* head;
 
     vector<string> veckeyword; //keyword
-    vector<string> vecargument; //argument
+    vector<int> vecargument; //argument
     vector<string> jobnumber; //iterates anytime a new job is issued
-    vector<string> expectedtimeforjob; //pushes expected time for each new job
+    vector<int> expectedtimeforjob; //pushes expected time for each new job
 
     //array holds core, disk and spooler;
     string keyword;
-    string argument;
+    int argument;
 
     //counter for expectedtime finish
     int numberhold = 0;
@@ -162,27 +162,40 @@ int main()
         //cout << vecargument[keyword_iteration] + " ";
         //cout << endl;
         //this works^
-        
-        if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
+        if(veckeyword[keyword_iteration] == "MPL")
         {
-            jobnumber.push_back(vecargument[keyword_iteration]);
-            int time_complexity_iteration = keyword_iteration;
-            while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
+            if(vecargument[keyword_iteration] == 1)
             {
-                numberhold += stoi(vecargument[time_complexity_iteration]); //adding the arguments up until the next job
-                cout << numberhold << " ";
-                time_complexity_iteration++;
-                if(veckeyword[time_complexity_iteration] == "JOB")
+
+                if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
                 {
-                    string correction = to_string(numberhold);
-                    cout << correction << " ";
-                    expectedtimeforjob.push_back(correction); //giving an expected time completion for each new job
+                    jobnumber.push_back(to_string(vecargument[keyword_iteration]));
+                    int time_complexity_iteration = keyword_iteration;
+                    while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
+                    {
+                        numberhold += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
+                        cout << numberhold << " ";
+                        time_complexity_iteration++;
+                        if(veckeyword[time_complexity_iteration] == "JOB")
+                        {
+                            cout << numberhold << " ";
+                            expectedtimeforjob.push_back(numberhold); //giving an expected time completion for each new job
+                        }
+                    }
+                }
+                else if(veckeyword[keyword_iteration] == "PRINT")
+                {
+
+                }
+                else if(veckeyword[keyword_iteration] == "CORE")
+                {
+
+                }
+                else if(veckeyword[keyword_iteration] == "DISK")
+                {
+
                 }
             }
-        }
-        else if(veckeyword[keyword_iteration] == "PRINT")
-        {
-
         }
     }
     
