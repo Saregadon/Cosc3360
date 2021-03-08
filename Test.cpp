@@ -158,9 +158,10 @@ int main()
     for(int keyword_iteration = 0; keyword_iteration < veckeyword.size(); keyword_iteration++) //keyword_iteration == i
     {
         //equation start
-        cout << veckeyword[keyword_iteration] + " ";
-        cout << vecargument[keyword_iteration] + " ";
-        cout << endl;
+        //cout << veckeyword[keyword_iteration] + " ";
+        //cout << vecargument[keyword_iteration] + " ";
+        //cout << endl;
+        //this works^
         
         if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
         {
