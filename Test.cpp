@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void core_request(string how_long, int jobID, vector<int> jobqueue, bool &core)
+void core_request(int how_long, int jobID, vector<int> jobqueue, bool &core)
 {
     if(core == true) //true == free
     {
@@ -141,6 +141,7 @@ int main()
     bool core = true; //true means ready
 
     //counter for expected time finish
+    int time_taken = 0;
     int timetakenforall = 0;
 
     //holds job number
@@ -195,7 +196,8 @@ int main()
                 }
                 else if(veckeyword[keyword_iteration] == "CORE")
                 {
-
+                    core_request(vecargument[keyword_iteration], jobID, );
+                    core_release();
                 }
                 else if(veckeyword[keyword_iteration] == "DISK")
                 {
