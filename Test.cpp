@@ -91,7 +91,7 @@ void spooler_release(int how_long, int jobID, vector<int> Squeue, int &completio
     if(!Squeue.empty())
     {
         Squeue.pop_back();
-        //completion = current_time + how_long;
+        completion = current_time + how_long;
     }
     else
     {
@@ -100,24 +100,18 @@ void spooler_release(int how_long, int jobID, vector<int> Squeue, int &completio
     //process next job request for job jobID
 } //spooler_release
 
-void print(vector<string> expectedtimeforjob, int i, int diskcounter, float coreutilization) //i poses as the job number
+void print(int completedtime, int i) //i poses as the job number
 {
-    cout << "Job " << i << " terminates at time " << expectedtimeforjob[i] << endl;
+    cout << "Job " << i << " terminates at time " << completedtime << endl;
     cout << "Job Table:" << endl;
     if(false) //must find out how to see if job is completed or not for function.
     {
-        cout << "Job " << i /*change to job that is active*/ << " is RUNNING" << endl;
+        cout << "Job " << i << " is RUNNING" << endl;
     }
     else //if job is completed
     {
         cout << "There are no active jobs" << endl;
     }
-
-    cout << "SUMMARY:" << endl;
-    cout << "Totaly elapsed time: " << expectedtimeforjob[i] << "ms" << endl;
-    cout << "Total number of disk access: " << diskcounter << endl;
-    cout << "Core utilization: " << coreutilization << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
-                                    //maybe just use (float coresadded = coreutilization/expectedtimeforjob[i];)
 }
 
 string timeequation() //possibly set = vector and have it push_back the function
@@ -142,8 +136,19 @@ int main()
     string keyword;
     int argument;
 
-    //counter for expectedtime finish
-    int numberhold = 0;
+    //bools if theyre ready or not
+    bool disk = true; //true means ready
+    bool core = true; //true means ready
+
+    //counter for expected time finish
+    int timetakenforall = 0;
+
+    //holds job number
+    int jobID;
+
+    //count for all disks and cores added
+    int diskcounter = 0;
+    int corecounter = 0;
 
     while(cin >> keyword >> argument)
     {
@@ -158,9 +163,9 @@ int main()
     for(int keyword_iteration = 0; keyword_iteration < veckeyword.size(); keyword_iteration++) //keyword_iteration == i
     {
         //equation start
-        //cout << veckeyword[keyword_iteration] + " ";
-        //cout << vecargument[keyword_iteration] + " ";
-        //cout << endl;
+        cout << veckeyword[keyword_iteration] + " ";
+        cout << vecargument[keyword_iteration] + " ";
+        cout << endl;
         //this works^
         if(veckeyword[keyword_iteration] == "MPL")
         {
@@ -169,23 +174,24 @@ int main()
 
                 if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
                 {
+                    jobID = vecargument[keyword_iteration];
                     jobnumber.push_back(to_string(vecargument[keyword_iteration]));
                     int time_complexity_iteration = keyword_iteration;
                     while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
                     {
-                        numberhold += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
-                        cout << numberhold << " ";
+                        timetakenforall += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
+                        cout << timetakenforall << " ";
                         time_complexity_iteration++;
                         if(veckeyword[time_complexity_iteration] == "JOB")
                         {
-                            cout << numberhold << " ";
-                            expectedtimeforjob.push_back(numberhold); //giving an expected time completion for each new job
+                            cout << timetakenforall << " ";
+                            expectedtimeforjob.push_back(timetakenforall); //giving an expected time completion for each new job
                         }
                     }
                 }
                 else if(veckeyword[keyword_iteration] == "PRINT")
                 {
-
+                    print(timetakenforall, jobID);
                 }
                 else if(veckeyword[keyword_iteration] == "CORE")
                 {
@@ -211,6 +217,15 @@ int main()
     {
         cout << expectedtimeforjob[i] << endl;
     }
+
+    float coresadded = 0;
+
+    cout << "SUMMARY:" << endl;
+    cout << "Totaly elapsed time: " << timetakenforall << "ms" << endl;
+    cout << "Number of jobs that completed: " << jobID << endl;
+    cout << "Total number of disk access: " << diskcounter << endl;
+    cout << "Core utilization: " << (coresadded = corecounter/timetakenforall) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
+                                    //maybe just use (float coresadded = coreutilization/expectedtimeforjob[i];)
 
     return 0;
 }
