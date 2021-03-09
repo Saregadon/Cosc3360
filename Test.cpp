@@ -11,78 +11,83 @@
 
 using namespace std;
 
-void core_request(int how_long, int jobID, vector<int> jobqueue, bool &core)
+void core_request(int how_long, int jobID, vector<int> Cqueue, int &current_time, bool &core)
 {
+
     if(core == true) //true == free
     {
         core = false; //false == busy
         //schedule CORE completion at time
-        //current_time + how_long for job jobID;
+        current_time = current_time + how_long;
+        Cqueue.push_back(1);
     }
     else
     {
-        //jobqueue.push_back(jobID);  //queue jobID in readyQueue
+        core = true;//jobqueue.push_back(jobID);  //queue jobID in readyQueue
+        cout << "Job " << jobID << " requests a core at time " << current_time << " ms for " << how_long << " ms." << endl;
     }
 } //core_request
 
 //change to int to return completion time?
-void core_release(int how_long, int jobID, vector<int> Rqueue, int &completion, bool &core)
+void core_release(int how_long, int jobID, vector<int> Cqueue, int &current_time, bool &core)
 {
-    if(!Rqueue.empty())
+    if(!Cqueue.empty())
     {
-        //Rqueue.pop_back().front();
-        //completion = current_time + how_long; //how_long == jobID
+        Cqueue.pop_back();
+        current_time = current_time + how_long; //how_long == jobID
     }
     else
     {
         core = true;
+        cout << "Job " << jobID << " will release a core at time " << current_time << " ms." << endl;
     }
     //process next job request for job jobID
 } //core_release
 
-void disk_request(int how_long, vector<int> Dqueue, int jobID, int &completion, bool &disk)
+void disk_request(int how_long, int jobID, vector<int> Dqueue, int &current_time, bool &disk)
 {
-    if(how_long == 0)
-    {
-        //perform next job request
-    }
-    else if(disk == true) //true == free
+    if(disk == true) //true == free
     {
         disk = false; //false == busy
         //schedule DISK completion event at time
-        //completion = current_time + how_long for job jobID
-    }
-    else
-    {
-        //Dqueue.push_back(jobID) in diskQueue
-    }
-} // disk_request
-
-void disk_completion(int how_long, int jobID, vector<int> Dqueue, int &completion, bool &disk)
-{
-    if(!Dqueue.empty())
-    {
-        //Dqueue.pop_back()
-        //completion = current_time + how_long; //how_long == jobID
+        current_time = current_time + how_long;
+        Dqueue.push_back(1);
     }
     else
     {
         disk = true;
+        cout << "Job " << jobID << " requests a disk at time " << current_time << " ms for " << how_long << " ms." << endl;
     }
-    //process next job request for job jobID
-} //disk_completion
+} // disk_request
 
-void spooler_request(int how_long, int jobID, vector<int> Squeue, int &completion, bool &disk)
+void disk_release(int how_long, int jobID, vector<int> Dqueue, int &current_time, bool &disk)
 {
-    if(disk == true) //true == free //should be spooler bool?
+    if(!Dqueue.empty())
     {
-        disk = false;
-        //schedule SPOOLER completion event at time
-        //completion = current_time + how_long; //how_long == jobID
+        Dqueue.pop_back();
+        current_time = current_time + how_long; //how_long == jobID
     }
     else
     {
+        disk = true;
+        cout << "Job " << jobID << " will release a disk at time " << current_time << " ms." << endl;
+    }
+    //process next job request for job jobID
+} //disk_release
+
+void spooler_request(int how_long, int jobID, vector<int> Squeue, int &current_time, bool &spooler)
+{
+    if(spooler == true) //true == free //should be spooler bool?
+    {
+        spooler = false;
+        //schedule SPOOLER completion event at time
+        current_time = current_time + how_long; //how_long == jobID
+    }
+    else
+    {
+        spooler = true;
         //Squeue.push(jobID);
+        cout << "Job " << jobID << " requests a spooler at time " << current_time << " ms for " << how_long << " ms." << endl;
     }
 } //spooler_request
 
@@ -96,6 +101,7 @@ void spooler_release(int how_long, int jobID, vector<int> Squeue, bool &spooler,
     else
     {
         spooler = true;
+        cout << "Job " << jobID << " will release a spooler at time " << current_time << " ms." << endl;
     }
     //process next job request for job jobID
 } //spooler_release
@@ -132,17 +138,23 @@ int main()
     vector<string> jobnumber; //iterates anytime a new job is issued
     vector<int> expectedtimeforjob; //pushes expected time for each new job
 
+    //vector holders to find if we have something in the core or not
+    vector<int> Disk_queue;
+    vector<int> Spooler_queue;
+    vector<int> Core_queue;
+
     //array holds core, disk and spooler;
     string keyword;
     int argument;
 
     //bools if theyre ready or not
-    bool disk = true; //true means ready
-    bool core = true; //true means ready
+    bool disk = true; //true means ready //false means busy
+    bool core = true; //true means ready //false means busy
+    bool spooler = true; //true means ready //false means busy
 
     //counter for expected time finish
     int time_taken = 0;
-    int timetakenforall = 0;
+    int time_taken_for_all = 0;
 
     //holds job number
     int jobID;
@@ -168,6 +180,11 @@ int main()
         cout << vecargument[keyword_iteration] + " ";
         cout << endl;
         //this works^
+
+        spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, spooler, time_taken);
+        core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core);
+        disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk);
+        
         if(veckeyword[keyword_iteration] == "MPL")
         {
             if(vecargument[keyword_iteration] == 1)
@@ -180,28 +197,28 @@ int main()
                     int time_complexity_iteration = keyword_iteration;
                     while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
                     {
-                        timetakenforall += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
-                        cout << timetakenforall << " ";
+                        time_taken_for_all += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
+                        cout << time_taken_for_all << " ";
                         time_complexity_iteration++;
                         if(veckeyword[time_complexity_iteration] == "JOB")
                         {
-                            cout << timetakenforall << " ";
-                            expectedtimeforjob.push_back(timetakenforall); //giving an expected time completion for each new job
+                            cout << time_taken_for_all << " ";
+                            expectedtimeforjob.push_back(time_taken_for_all); //giving an expected time completion for each new job
                         }
                     }
                 }
                 else if(veckeyword[keyword_iteration] == "PRINT")
                 {
-                    print(timetakenforall, jobID);
+                    print(time_taken, jobID);
                 }
                 else if(veckeyword[keyword_iteration] == "CORE")
                 {
-                    core_request(vecargument[keyword_iteration], jobID, );
-                    core_release();
+                    core_request(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core);
                 }
                 else if(veckeyword[keyword_iteration] == "DISK")
                 {
 
+                    disk_request(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk);
                 }
             }
         }
@@ -223,10 +240,10 @@ int main()
     float coresadded = 0;
 
     cout << "SUMMARY:" << endl;
-    cout << "Totaly elapsed time: " << timetakenforall << "ms" << endl;
+    cout << "Totaly elapsed time: " << time_taken << "ms" << endl;
     cout << "Number of jobs that completed: " << jobID << endl;
     cout << "Total number of disk access: " << diskcounter << endl;
-    cout << "Core utilization: " << (coresadded = corecounter/timetakenforall) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
+    cout << "Core utilization: " << (coresadded = corecounter/time_taken) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
                                     //maybe just use (float coresadded = coreutilization/expectedtimeforjob[i];)
 
     return 0;
