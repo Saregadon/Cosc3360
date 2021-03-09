@@ -90,7 +90,7 @@ bool spooler_release(int how_long, int jobID, vector<int>& Squeue, bool &spooler
 void print(int completedtime, int i, bool& core, bool& disk, bool& spooler, bool& terminate) //i poses as the job number
 {
     cout << endl << endl;
-    cout << "Job " << i << " terminates at time " << completedtime << endl;
+    cout << "Job " << i << " terminates at time " << completedtime << " ms." << endl;
     cout << "Job Table:" << endl;
     if(core == false || disk == false || spooler == false) //must find out how to see if job is completed or not for function.
     {
@@ -168,8 +168,9 @@ int main()
 
         if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
         {
+            jobcounter++;
+            if(jobcounter > jobID) terminate = true;
             jobID = vecargument[keyword_iteration];
-            if(jobID > jobnumber[keyword_iteration]) terminate = true;
             jobnumber.push_back(vecargument[keyword_iteration]);
             /*int time_complexity_iteration = keyword_iteration;
             while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
