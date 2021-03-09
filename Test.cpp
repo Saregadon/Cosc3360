@@ -92,7 +92,7 @@ void print(int completedtime, int i, bool& core, bool& disk, bool& spooler, bool
     cout << endl << endl;
     cout << "Job " << i << " terminates at time " << completedtime << " ms." << endl;
     cout << "Job Table:" << endl;
-    if(core == false || disk == false || spooler == false) //must find out how to see if job is completed or not for function.
+    if(core == false && disk == false && spooler == false) //must find out how to see if job is completed or not for function.
     {
         cout << "Job " << i << " is RUNNING" << endl << endl;
     }
@@ -174,6 +174,7 @@ int main()
             jobnumber.push_back(vecargument[keyword_iteration]);
 
             cout << "Job " << jobID << " is fetched at time " << time_taken << " ms" << endl;
+            cout << "Job Table: " << endl;
 
             /*int time_complexity_iteration = keyword_iteration;
             while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
@@ -190,7 +191,7 @@ int main()
         }
         else if(veckeyword[keyword_iteration] == "PRINT")
         {
-            print(time_taken, jobID, core, disk, spooler, terminate);
+            spooler_request(vecargument[keyword_iteration], jobID, Spooler_queue, time_taken, spooler);
         }
         else if(veckeyword[keyword_iteration] == "CORE")
         {
@@ -207,6 +208,11 @@ int main()
         if (core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core) == false); //must set to be true
         if (disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk) == false); //must set to be true
         //cout << bscounter++ << endl; //loops through 148 times for input10.txt
+
+        if(terminate == true)
+        {
+            print(time_taken, jobID, core, disk, spooler, terminate);
+        }
     }
     
     cout << endl;
