@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void core_request(int how_long, int jobID, vector<int> Cqueue, int &current_time, bool &core)
+void core_request(int how_long, int jobID, vector<int>& Cqueue, int &current_time, bool &core)
 {
 
     if(core == true) //true == free
@@ -29,7 +29,7 @@ void core_request(int how_long, int jobID, vector<int> Cqueue, int &current_time
 } //core_request
 
 //change to int to return completion time?
-bool core_release(int how_long, int jobID, vector<int> Cqueue, int &current_time, bool &core)
+bool core_release(int how_long, int jobID, vector<int>& Cqueue, int &current_time, bool &core)
 {
     if(!Cqueue.empty())
     {
@@ -44,7 +44,7 @@ bool core_release(int how_long, int jobID, vector<int> Cqueue, int &current_time
     //process next job request for job jobID
 } //core_release
 
-void disk_request(int how_long, int jobID, vector<int> Dqueue, int &current_time, bool &disk)
+void disk_request(int how_long, int jobID, vector<int>& Dqueue, int &current_time, bool &disk)
 {
     if(disk == true) //true == free
     {
@@ -60,7 +60,7 @@ void disk_request(int how_long, int jobID, vector<int> Dqueue, int &current_time
     }
 } // disk_request
 
-bool disk_release(int how_long, int jobID, vector<int> Dqueue, int &current_time, bool &disk)
+bool disk_release(int how_long, int jobID, vector<int>& Dqueue, int &current_time, bool &disk)
 {
     if(!Dqueue.empty())
     {
@@ -75,7 +75,7 @@ bool disk_release(int how_long, int jobID, vector<int> Dqueue, int &current_time
     //process next job request for job jobID
 } //disk_release
 
-void spooler_request(int how_long, int jobID, vector<int> Squeue, int &current_time, bool &spooler)
+void spooler_request(int how_long, int jobID, vector<int>& Squeue, int &current_time, bool &spooler)
 {
     if(spooler == true) //true == free //should be spooler bool?
     {
@@ -91,7 +91,7 @@ void spooler_request(int how_long, int jobID, vector<int> Squeue, int &current_t
     }
 } //spooler_request
 
-bool spooler_release(int how_long, int jobID, vector<int> Squeue, bool &spooler, int &current_time)
+bool spooler_release(int how_long, int jobID, vector<int>& Squeue, bool &spooler, int &current_time)
 {
     if(!Squeue.empty())
     {
@@ -240,7 +240,7 @@ int main()
     cout << "Totaly elapsed time: " << time_taken << "ms" << endl;
     cout << "Number of jobs that completed: " << jobID << endl;
     cout << "Total number of disk access: " << diskcounter << endl;
-    cout << "Core utilization: " << (coresadded = corecounter/time_taken) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
+    cout << "Core utilization: " << (coresadded = (float)(corecounter)/(float)(time_taken)) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
                                     //maybe just use (float coresadded = coreutilization/expectedtimeforjob[i];)
 
     return 0;
