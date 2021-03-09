@@ -219,17 +219,6 @@ int main()
     
     cout << endl;
 
-    for(int i = 0; i < jobnumber.size(); i++) //expectedtimeforjob[i] causes segmentation fault, should be same size as jobnumber though?
-    {
-        cout << jobnumber[i] << " ";// << expectedtimeforjob[i] << " ";
-    }
-    cout << endl;
-
-    for(int i = 0; i < expectedtimeforjob.size(); i++)
-    {
-        cout << expectedtimeforjob[i] << endl;
-    }
-
     float coresadded = 0;
 
     cout << "SUMMARY:" << endl;
