@@ -181,7 +181,8 @@ int main()
             disk_request(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk);
         }
         else if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
-        {
+        {   
+            if(terminate == true) print(time_taken, jobID, core, disk, spooler, terminate);
             jobcounter++;
             if(jobcounter > jobID && jobcounter > 2) terminate = true;
             jobID = vecargument[keyword_iteration];
@@ -210,11 +211,6 @@ int main()
         if (core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core) == false); //must set to be true
         if (disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk) == false); //must set to be true
         //cout << bscounter++ << endl; //loops through 148 times for input10.txt
-
-        if(terminate == true)
-        {
-            print(time_taken, jobID, core, disk, spooler, terminate);
-        }
     }
     
     cout << endl;
