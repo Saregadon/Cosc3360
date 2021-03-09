@@ -94,15 +94,15 @@ void print(int completedtime, int i, bool& core, bool& disk, bool& spooler, bool
     cout << "Job Table:" << endl;
     if(core == false && disk == false && spooler == false) //must find out how to see if job is completed or not for function.
     {
-        cout << "Job " << i << " is RUNNING" << endl << endl;
+        cout << "Job " << i << " is RUNNING" << endl;
     }
     else if(terminate == true)
     {
-        cout << "Job " << i << " is TERMINATED." << endl << endl;
+        cout << "Job " << i << " is TERMINATED." << endl;
     }
     else //if job is completed
     {
-        cout << "There are no active jobs" << endl << endl;
+        cout << "There are no active jobs" << endl;
     }
     terminate = false;
 }
