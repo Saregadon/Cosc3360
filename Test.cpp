@@ -94,15 +94,15 @@ void print(int completedtime, int i, bool& core, bool& disk, bool& spooler, bool
     cout << "Job Table:" << endl;
     if(core == false || disk == false || spooler == false) //must find out how to see if job is completed or not for function.
     {
-        cout << "Job " << i << " is RUNNING" << endl;
+        cout << "Job " << i << " is RUNNING" << endl << endl;
     }
     else if(terminate == true)
     {
-        cout << "Job " << i << " is TERMINATED." << endl;
+        cout << "Job " << i << " is TERMINATED." << endl << endl;
     }
     else //if job is completed
     {
-        cout << "There are no active jobs" << endl;
+        cout << "There are no active jobs" << endl << endl;
     }
     terminate = false;
 }
@@ -172,6 +172,9 @@ int main()
             if(jobcounter > jobID) terminate = true;
             jobID = vecargument[keyword_iteration];
             jobnumber.push_back(vecargument[keyword_iteration]);
+
+            cout << "Job " << jobID << " is fetched at time " << time_taken << " ms" << endl;
+
             /*int time_complexity_iteration = keyword_iteration;
             while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
             {
