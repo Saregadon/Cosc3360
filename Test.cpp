@@ -22,10 +22,6 @@ void core_request(int how_long, int jobID, vector<int>& Cqueue, int &current_tim
         Cqueue.push_back(1);
         cout << "Job " << jobID << " requests a core at time " << current_time << " ms for " << how_long << " ms." << endl;
     }
-    else
-    {
-        core = true;//jobqueue.push_back(jobID);  //queue jobID in readyQueue
-    }
 } //core_request
 
 //change to int to return completion time?
@@ -35,12 +31,9 @@ bool core_release(int how_long, int jobID, vector<int>& Cqueue, int &current_tim
     {
         Cqueue.pop_back();
         current_time = current_time + how_long; //how_long == jobID
-        core = false;
-    }
-    else
-    {
         core = true;
         cout << "Job " << jobID << " will release a core at time " << current_time << " ms." << endl;
+        return true;
     }
     //process next job request for job jobID
 } //core_release
@@ -55,10 +48,6 @@ void disk_request(int how_long, int jobID, vector<int>& Dqueue, int &current_tim
         Dqueue.push_back(1);
         cout << "Job " << jobID << " requests disk access at time " << current_time << " ms for " << how_long << " ms." << endl;
     }
-    else
-    {
-        //cout << "Job " << jobID << " requests disk access at time " << current_time << " ms for " << how_long << " ms." << endl;
-    }
 } // disk_request
 
 bool disk_release(int how_long, int jobID, vector<int>& Dqueue, int &current_time, bool &disk)
@@ -67,9 +56,6 @@ bool disk_release(int how_long, int jobID, vector<int>& Dqueue, int &current_tim
     {
         Dqueue.pop_back();
         current_time = current_time + how_long; //how_long == jobID
-    }
-    else
-    {
         disk = true;
         cout << "Job " << jobID << " will release a disk at time " << current_time << " ms." << endl;
         return true;
@@ -86,11 +72,6 @@ void spooler_request(int how_long, int jobID, vector<int>& Squeue, int &current_
         current_time = current_time + how_long; //how_long == jobID
         cout << "Job " << jobID << " requests a spooler at time " << current_time << " ms for " << how_long << " ms." << endl;
     }
-    else
-    {
-        //Squeue.push(jobID);
-        cout << "Job " << jobID << " requests a spooler at time " << current_time << " ms for " << how_long << " ms." << endl;
-    }
 } //spooler_request
 
 bool spooler_release(int how_long, int jobID, vector<int>& Squeue, bool &spooler, int &current_time)
@@ -99,9 +80,6 @@ bool spooler_release(int how_long, int jobID, vector<int>& Squeue, bool &spooler
     {
         Squeue.pop_back();
         current_time = current_time + how_long;
-    }
-    else
-    {
         spooler = true;
         cout << "Job " << jobID << " will release a spooler at time " << current_time << " ms." << endl;
         return true;
@@ -109,11 +87,11 @@ bool spooler_release(int how_long, int jobID, vector<int>& Squeue, bool &spooler
     //process next job request for job jobID
 } //spooler_release
 
-void print(int completedtime, int i) //i poses as the job number
+void print(int completedtime, int i, bool& core, bool& disk, bool& spooler) //i poses as the job number
 {
     cout << "Job " << i << " terminates at time " << completedtime << endl;
     cout << "Job Table:" << endl;
-    if(false) //must find out how to see if job is completed or not for function.
+    if(core == false || disk == false || spooler == false) //must find out how to see if job is completed or not for function.
     {
         cout << "Job " << i << " is RUNNING" << endl;
     }
@@ -199,7 +177,7 @@ int main()
         }
         else if(veckeyword[keyword_iteration] == "PRINT")
         {
-            print(time_taken, jobID);
+            print(time_taken, jobID, core, disk, spooler);
         }
         else if(veckeyword[keyword_iteration] == "CORE")
         {
@@ -212,10 +190,10 @@ int main()
             disk_request(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk);
         }
 
-        if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, spooler, time_taken) == false);
-        if (core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core) == false);
-        if (disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk) == false);
-//cout << bscounter++ << endl; //loops through 148 times for input10.txt
+        if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, spooler, time_taken) == false); //must set to be true
+        if (core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core) == false); //must set to be true
+        if (disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk) == false); //must set to be true
+        //cout << bscounter++ << endl; //loops through 148 times for input10.txt
     }
     
     cout << endl;
