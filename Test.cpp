@@ -192,7 +192,7 @@ int main()
                 {
                     jobID = vecargument[keyword_iteration];
                     jobnumber.push_back(vecargument[keyword_iteration]);
-                    int time_complexity_iteration = keyword_iteration;
+                    /*int time_complexity_iteration = keyword_iteration;
                     while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
                     {
                         time_taken_for_all += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
@@ -203,7 +203,7 @@ int main()
                             cout << time_taken_for_all << " ";
                             expectedtimeforjob.push_back(time_taken_for_all); //giving an expected time completion for each new job
                         }
-                    }
+                    }*/
                 }
                 else if(veckeyword[keyword_iteration] == "PRINT")
                 {
@@ -242,7 +242,7 @@ int main()
     cout << "Totaly elapsed time: " << time_taken << " ms" << endl;
     cout << "Number of jobs that completed: " << jobID << endl;
     cout << "Total number of disk access: " << diskcounter << endl;
-    cout << "Core utilization: " << (coresadded = (float)(corecounter)/(float)(time_taken)) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
+    cout << "CPU utilization: " << (coresadded = (float)(corecounter)/(float)(time_taken)) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
                                     //maybe just use (float coresadded = coreutilization/expectedtimeforjob[i];)
 
     return 0;
