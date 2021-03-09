@@ -69,13 +69,13 @@ void spooler_request(int how_long, int jobID, vector<int>& Squeue, int &current_
     {
         spooler = false;
         //schedule SPOOLER completion event at time
+        Squeue.push_back(1);
         cout << "-- Job " << jobID << " requests spooler access at time " << current_time << " ms for " << how_long << " ms." << endl;
         current_time = current_time + how_long;
-        
     }
 } //spooler_request
 
-bool spooler_release(int how_long, int jobID, vector<int>& Squeue, bool &spooler, int &current_time)
+bool spooler_release(int how_long, int jobID, vector<int>& Squeue, int &current_time, bool &spooler)
 {
     if(!Squeue.empty())
     {
@@ -211,7 +211,7 @@ int main()
             }*/
         }
 
-        if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, spooler, time_taken) == false); //must set to be true
+        if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, time_taken, spooler) == false); //must set to be true
         if (core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core) == false); //must set to be true
         if (disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk) == false); //must set to be true
         //cout << bscounter++ << endl; //loops through 148 times for input10.txt
