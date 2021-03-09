@@ -140,7 +140,7 @@ int main()
     int time_taken_for_all = 0;
 
     //holds job number
-    int jobID;
+    int jobID = 1; //always start at job # 1
     int jobcounter = 0;
 
     //count for all disks and cores added
