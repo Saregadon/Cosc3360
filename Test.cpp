@@ -165,7 +165,9 @@ int main()
         //cout << keyword << argument << endl;
         //addnode(head, keyword, argument);
         veckeyword.push_back(keyword);
-        vecargument.push_back(stoi(argument));
+        int hold = stoi(argument);
+        cout << argument << " ";
+        vecargument.push_back(hold);
     }
 
     cout << "/////////////////////////////////////" << endl;
@@ -174,7 +176,7 @@ int main()
     {
         //equation start
         cout << veckeyword[keyword_iteration] + " ";
-        cout << vecargument[keyword_iteration] + " ";
+        cout << vecargument[keyword_iteration];
         cout << endl;
         //this works^
 
