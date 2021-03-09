@@ -87,7 +87,7 @@ bool spooler_release(int how_long, int jobID, vector<int>& Squeue, bool &spooler
     //process next job request for job jobID
 } //spooler_release
 
-void print(int completedtime, int i, bool& core, bool& disk, bool& spooler) //i poses as the job number
+void print(int completedtime, int i, bool& core, bool& disk, bool& spooler, bool& terminate) //i poses as the job number
 {
     cout << endl << endl;
     cout << "Job " << i << " terminates at time " << completedtime << endl;
@@ -96,10 +96,15 @@ void print(int completedtime, int i, bool& core, bool& disk, bool& spooler) //i 
     {
         cout << "Job " << i << " is RUNNING" << endl;
     }
+    else if(terminate == true)
+    {
+        cout << "Job " << i << " is TERMINATED." << endl;
+    }
     else //if job is completed
     {
         cout << "There are no active jobs" << endl;
     }
+    terminate = false;
 }
 
 int main()
@@ -128,6 +133,7 @@ int main()
     bool disk = true; //true means ready //false means busy
     bool core = true; //true means ready //false means busy
     bool spooler = true; //true means ready //false means busy
+    bool terminate = true; //true means a job is terminating
 
     //counter for expected time finish
     int time_taken = 0;
@@ -135,6 +141,7 @@ int main()
 
     //holds job number
     int jobID;
+    int jobcounter = 0;
 
     //count for all disks and cores added
     int diskcounter = 0;
@@ -162,6 +169,7 @@ int main()
         if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
         {
             jobID = vecargument[keyword_iteration];
+            if(jobID > jobnumber[keyword_iteration]) terminate = true;
             jobnumber.push_back(vecargument[keyword_iteration]);
             /*int time_complexity_iteration = keyword_iteration;
             while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
@@ -178,7 +186,7 @@ int main()
         }
         else if(veckeyword[keyword_iteration] == "PRINT")
         {
-            print(time_taken, jobID, core, disk, spooler);
+            print(time_taken, jobID, core, disk, spooler, terminate);
         }
         else if(veckeyword[keyword_iteration] == "CORE")
         {
