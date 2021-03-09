@@ -30,7 +30,7 @@ bool core_release(int how_long, int jobID, vector<int>& Cqueue, int &current_tim
     if(!Cqueue.empty())
     {
         Cqueue.pop_back();
-        current_time = current_time + how_long; //how_long == jobID
+        //current_time = current_time + how_long; //how_long == jobID
         core = true;
         cout << "-- Job " << jobID << " will release a core at time " << current_time << " ms." << endl;
         return true;
@@ -55,7 +55,7 @@ bool disk_release(int how_long, int jobID, vector<int>& Dqueue, int &current_tim
     if(!Dqueue.empty())
     {
         Dqueue.pop_back();
-        current_time = current_time + how_long; //how_long == jobID
+        //current_time = current_time + how_long; //how_long == jobID
         disk = true;
         cout << "-- Job " << jobID << " will release the disk at time " << current_time << " ms." << endl;
         return true;
@@ -79,7 +79,7 @@ bool spooler_release(int how_long, int jobID, vector<int>& Squeue, bool &spooler
     if(!Squeue.empty())
     {
         Squeue.pop_back();
-        current_time = current_time + how_long;
+        //current_time = current_time + how_long;
         spooler = true;
         cout << "-- Job " << jobID << " will release the spooler at time " << current_time << " ms." << endl;
         return true;
