@@ -184,7 +184,7 @@ int main()
         {   
             if(terminate == true) print(time_taken, jobID, core, disk, spooler, terminate);
             jobcounter++;
-            if(jobcounter > jobID && jobcounter > 2) terminate = true;
+            if(jobcounter > jobID && jobcounter > 0 && jobID > 1) terminate = true;
             jobID = vecargument[keyword_iteration];
             jobnumber.push_back(vecargument[keyword_iteration]);
 
