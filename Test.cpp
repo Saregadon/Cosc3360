@@ -169,12 +169,13 @@ int main()
         if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
         {
             jobcounter++;
-            if(jobcounter > jobID) terminate = true;
+            if(jobcounter > jobID && jobcounter > 2) terminate = true;
             jobID = vecargument[keyword_iteration];
             jobnumber.push_back(vecargument[keyword_iteration]);
 
             cout << "Job " << jobID << " is fetched at time " << time_taken << " ms" << endl;
             cout << "Job Table: " << endl;
+            cout << "There are no active jobs. " << endl << endl;
 
             /*int time_complexity_iteration = keyword_iteration;
             while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
