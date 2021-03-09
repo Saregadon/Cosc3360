@@ -29,7 +29,7 @@ void core_request(int how_long, int jobID, vector<int> Cqueue, int &current_time
 } //core_request
 
 //change to int to return completion time?
-void core_release(int how_long, int jobID, vector<int> Cqueue, int &current_time, bool &core)
+bool core_release(int how_long, int jobID, vector<int> Cqueue, int &current_time, bool &core)
 {
     if(!Cqueue.empty())
     {
@@ -56,11 +56,11 @@ void disk_request(int how_long, int jobID, vector<int> Dqueue, int &current_time
     else
     {
         disk = true;
-        cout << "Job " << jobID << " requests a disk at time " << current_time << " ms for " << how_long << " ms." << endl;
+        cout << "Job " << jobID << " requests disk access at time " << current_time << " ms for " << how_long << " ms." << endl;
     }
 } // disk_request
 
-void disk_release(int how_long, int jobID, vector<int> Dqueue, int &current_time, bool &disk)
+bool disk_release(int how_long, int jobID, vector<int> Dqueue, int &current_time, bool &disk)
 {
     if(!Dqueue.empty())
     {
@@ -91,17 +91,19 @@ void spooler_request(int how_long, int jobID, vector<int> Squeue, int &current_t
     }
 } //spooler_request
 
-void spooler_release(int how_long, int jobID, vector<int> Squeue, bool &spooler, int &current_time)
+bool spooler_release(int how_long, int jobID, vector<int> Squeue, bool &spooler, int &current_time)
 {
     if(!Squeue.empty())
     {
         Squeue.pop_back();
         current_time = current_time + how_long;
+        return false;
     }
     else
     {
         spooler = true;
         cout << "Job " << jobID << " will release a spooler at time " << current_time << " ms." << endl;
+        return true;
     }
     //process next job request for job jobID
 } //spooler_release
@@ -118,11 +120,6 @@ void print(int completedtime, int i) //i poses as the job number
     {
         cout << "There are no active jobs" << endl;
     }
-}
-
-string timeequation() //possibly set = vector and have it push_back the function
-{
-
 }
 
 int main()
@@ -145,7 +142,7 @@ int main()
 
     //array holds core, disk and spooler;
     string keyword;
-    int argument;
+    string argument;
 
     //bools if theyre ready or not
     bool disk = true; //true means ready //false means busy
@@ -168,7 +165,7 @@ int main()
         //cout << keyword << argument << endl;
         //addnode(head, keyword, argument);
         veckeyword.push_back(keyword);
-        vecargument.push_back(argument);
+        vecargument.push_back(stoi(argument));
     }
 
     cout << "/////////////////////////////////////" << endl;
@@ -181,9 +178,9 @@ int main()
         cout << endl;
         //this works^
 
-        spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, spooler, time_taken);
-        core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core);
-        disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk);
+        if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, spooler, time_taken) == false);
+        if (core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core) == false);
+        if (disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk) == false);
         
         if(veckeyword[keyword_iteration] == "MPL")
         {
@@ -217,7 +214,6 @@ int main()
                 }
                 else if(veckeyword[keyword_iteration] == "DISK")
                 {
-
                     disk_request(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk);
                 }
             }
