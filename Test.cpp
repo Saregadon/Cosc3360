@@ -18,9 +18,9 @@ void core_request(int how_long, int jobID, vector<int>& Cqueue, int &current_tim
     {
         core = false; //false == busy
         //schedule CORE completion at time
-        current_time = current_time + how_long;
         Cqueue.push_back(1);
         cout << "-- Job " << jobID << " requests a core at time " << current_time << " ms for " << how_long << " ms." << endl;
+        current_time = current_time + how_long;
     }
 } //core_request
 
@@ -44,9 +44,9 @@ void disk_request(int how_long, int jobID, vector<int>& Dqueue, int &current_tim
     {
         disk = false; //false == busy
         //schedule DISK completion event at time
-        current_time = current_time + how_long;
         Dqueue.push_back(1);
         cout << "-- Job " << jobID << " requests disk access at time " << current_time << " ms for " << how_long << " ms." << endl;
+        current_time = current_time + how_long;
     }
 } // disk_request
 
@@ -69,8 +69,9 @@ void spooler_request(int how_long, int jobID, vector<int>& Squeue, int &current_
     {
         spooler = false;
         //schedule SPOOLER completion event at time
-        current_time = current_time + how_long; //how_long == jobID
         cout << "-- Job " << jobID << " requests spooler access at time " << current_time << " ms for " << how_long << " ms." << endl;
+        current_time = current_time + how_long;
+        
     }
 } //spooler_request
 
