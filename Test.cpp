@@ -141,7 +141,7 @@ int main()
 
     //holds job number
     int jobID = 1; //always start at job # 1
-    int jobcounter = 0;
+    int jobcounter = 1;
 
     //count for all disks and cores added
     int diskcounter = 0;
@@ -186,6 +186,7 @@ int main()
 
             if(terminate == true) print(time_taken, jobID, core, disk, spooler, terminate);
             if(jobcounter > jobID) terminate = true;
+            if(jobcounter > 1) terminate = true;
 
             jobID = vecargument[keyword_iteration];
             jobnumber.push_back(vecargument[keyword_iteration]);
