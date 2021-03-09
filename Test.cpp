@@ -166,7 +166,6 @@ int main()
         //addnode(head, keyword, argument);
         veckeyword.push_back(keyword);
         int hold = stoi(argument);
-        cout << argument << " ";
         vecargument.push_back(hold);
     }
 
@@ -175,9 +174,9 @@ int main()
     for(int keyword_iteration = 0; keyword_iteration < veckeyword.size(); keyword_iteration++) //keyword_iteration == i
     {
         //equation start
-        cout << veckeyword[keyword_iteration] + " ";
-        cout << vecargument[keyword_iteration];
-        cout << endl;
+        //cout << veckeyword[keyword_iteration] + " ";
+        //cout << vecargument[keyword_iteration];
+        //cout << endl;
         //this works^
 
         if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, spooler, time_taken) == false);
