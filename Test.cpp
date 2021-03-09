@@ -178,50 +178,44 @@ int main()
         //cout << vecargument[keyword_iteration];
         //cout << endl;
         //this works^
+
+        if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
+        {
+            jobID = vecargument[keyword_iteration];
+            jobnumber.push_back(vecargument[keyword_iteration]);
+            /*int time_complexity_iteration = keyword_iteration;
+            while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
+            {
+                time_taken_for_all += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
+                //cout << time_taken_for_all << " ";
+                time_complexity_iteration++;
+                if(veckeyword[time_complexity_iteration] == "JOB")
+                {
+                    cout << time_taken_for_all << " ";
+                    expectedtimeforjob.push_back(time_taken_for_all); //giving an expected time completion for each new job
+                }
+            }*/
+        }
+        else if(veckeyword[keyword_iteration] == "PRINT")
+        {
+            print(time_taken, jobID);
+        }
+        else if(veckeyword[keyword_iteration] == "CORE")
+        {
+            corecounter++;
+            core_request(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core);
+        }
+        else if(veckeyword[keyword_iteration] == "DISK")
+        {
+            diskcounter++;
+            disk_request(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk);
+        }
+
         if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, spooler, time_taken) == false);
         if (core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core) == false);
         if (disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk) == false);
-        //cout << bscounter++ << endl; //loops through 148 times for input10.txt
-        
-        //if(veckeyword[keyword_iteration] == "MPL")
-        //{
-            //if(vecargument[keyword_iteration] == 1)
-            //{
-
-                if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
-                {
-                    jobID = vecargument[keyword_iteration];
-                    jobnumber.push_back(vecargument[keyword_iteration]);
-                    /*int time_complexity_iteration = keyword_iteration;
-                    while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
-                    {
-                        time_taken_for_all += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
-                        //cout << time_taken_for_all << " ";
-                        time_complexity_iteration++;
-                        if(veckeyword[time_complexity_iteration] == "JOB")
-                        {
-                            cout << time_taken_for_all << " ";
-                            expectedtimeforjob.push_back(time_taken_for_all); //giving an expected time completion for each new job
-                        }
-                    }*/
-                }
-                else if(veckeyword[keyword_iteration] == "PRINT")
-                {
-                    print(time_taken, jobID);
-                }
-                else if(veckeyword[keyword_iteration] == "CORE")
-                {
-                    corecounter++;
-                    core_request(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core);
-                }
-                else if(veckeyword[keyword_iteration] == "DISK")
-                {
-                    diskcounter++;
-                    disk_request(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk);
-                }
-            }
-        //}
-    //}
+//cout << bscounter++ << endl; //loops through 148 times for input10.txt
+    }
     
     cout << endl;
 
