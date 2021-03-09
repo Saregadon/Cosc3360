@@ -89,6 +89,7 @@ bool spooler_release(int how_long, int jobID, vector<int>& Squeue, bool &spooler
 
 void print(int completedtime, int i, bool& core, bool& disk, bool& spooler) //i poses as the job number
 {
+    cout << endl << endl;
     cout << "Job " << i << " terminates at time " << completedtime << endl;
     cout << "Job Table:" << endl;
     if(core == false || disk == false || spooler == false) //must find out how to see if job is completed or not for function.
