@@ -11,7 +11,7 @@
 
 using namespace std;
 
-void core_request(int how_long, int jobID, vector<int>& Cqueue, int &current_time, bool &core)
+void core_request(int how_long, int jobID, vector<int>& Cqueue, int &current_time, bool &core, int& core_use)
 {
 
     if(core == true) //true == free
@@ -21,6 +21,7 @@ void core_request(int how_long, int jobID, vector<int>& Cqueue, int &current_tim
         Cqueue.push_back(1);
         cout << "-- Job " << jobID << " requests a core at time " << current_time << " ms for " << how_long << " ms." << endl;
         current_time = current_time + how_long;
+        core_use += how_long;
     }
 } //core_request
 
@@ -147,6 +148,7 @@ int main()
     //count for all disks and cores added
     int diskcounter = 0;
     int corecounter = 0;
+    int core_use = 0;
 
     while(cin >> keyword >> argument)
     {
@@ -174,7 +176,7 @@ int main()
         else if(veckeyword[keyword_iteration] == "CORE")
         {
             corecounter++;
-            core_request(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core);
+            core_request(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core, core_use);
         }
         else if(veckeyword[keyword_iteration] == "DISK")
         {
@@ -185,8 +187,8 @@ int main()
         {   
             jobcounter++;
 
-            if(terminate == true) print(time_taken, jobID, core, disk, spooler, terminate);
-            if(jobcounter > jobID) terminate = true;
+            if(terminate == true) print(time_taken, jobID, core, disk, spooler, terminate);// if(jobList.empty() { break;} // IMPLEMENT THIS
+            if(jobcounter > jobID) terminate = true;                                       // else {jobList.pop();}        // IMPLEMENT THIS
             if(jobcounter > 1) terminate = true;
 
             jobID = vecargument[keyword_iteration];
@@ -225,7 +227,7 @@ int main()
     cout << "Totaly elapsed time: " << time_taken << " ms" << endl;
     cout << "Number of jobs that completed: " << jobID << endl;
     cout << "Total number of disk access: " << diskcounter << endl;
-    cout << "CPU utilization: " << (coresadded = (float)(corecounter)/(float)(time_taken)) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
+    cout << "CPU utilization: " << (coresadded = (float)(corecounter)/(float)(core_use)) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
                                     //maybe just use (float coresadded = coreutilization/expectedtimeforjob[i];)
 
     return 0;
@@ -238,3 +240,5 @@ int main()
 //total number of disc requests - 
 //cpu utilization, fraction of time device was busy between 0 and 1 -
 //must use strings, manipulate when changing to ints then change back to strings for final output
+//have multiple vectors, possibly use priority queue, sort vectors with multiple copies of jobs depending on the MPL size
+//say we have an MPL 3, have vectors with every job and sort them using for loops
