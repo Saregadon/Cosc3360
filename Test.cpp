@@ -89,7 +89,7 @@ bool spooler_release(int how_long, int jobID, vector<int>& Squeue, bool &spooler
 
 void print(int completedtime, int i, bool& core, bool& disk, bool& spooler, bool& terminate) //i poses as the job number
 {
-    cout << endl << endl;
+    cout << endl;
     cout << "Job " << i << " terminates at time " << completedtime << " ms." << endl;
     cout << "Job Table:" << endl;
     if(core == false && disk == false && spooler == false) //must find out how to see if job is completed or not for function.
@@ -166,13 +166,28 @@ int main()
         //cout << endl;
         //this works^
 
-        if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
+        if(veckeyword[keyword_iteration] == "PRINT")
+        {
+            spooler_request(vecargument[keyword_iteration], jobID, Spooler_queue, time_taken, spooler);
+        }
+        else if(veckeyword[keyword_iteration] == "CORE")
+        {
+            corecounter++;
+            core_request(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core);
+        }
+        else if(veckeyword[keyword_iteration] == "DISK")
+        {
+            diskcounter++;
+            disk_request(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk);
+        }
+        else if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
         {
             jobcounter++;
             if(jobcounter > jobID && jobcounter > 2) terminate = true;
             jobID = vecargument[keyword_iteration];
             jobnumber.push_back(vecargument[keyword_iteration]);
 
+            cout << endl << endl;
             cout << "Job " << jobID << " is fetched at time " << time_taken << " ms" << endl;
             cout << "Job Table: " << endl;
             cout << "There are no active jobs. " << endl << endl;
@@ -189,20 +204,6 @@ int main()
                     expectedtimeforjob.push_back(time_taken_for_all); //giving an expected time completion for each new job
                 }
             }*/
-        }
-        else if(veckeyword[keyword_iteration] == "PRINT")
-        {
-            spooler_request(vecargument[keyword_iteration], jobID, Spooler_queue, time_taken, spooler);
-        }
-        else if(veckeyword[keyword_iteration] == "CORE")
-        {
-            corecounter++;
-            core_request(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core);
-        }
-        else if(veckeyword[keyword_iteration] == "DISK")
-        {
-            diskcounter++;
-            disk_request(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk);
         }
 
         if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, spooler, time_taken) == false); //must set to be true
