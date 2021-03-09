@@ -216,6 +216,7 @@ int main()
         if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, time_taken, spooler) == false); //must set to be true
         if (core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core) == false); //must set to be true
         if (disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk) == false); //must set to be true
+        //for all 3 of these, implenet a jobqueue that pops when the releases are called, and pushed when the requests are called
         //cout << bscounter++ << endl; //loops through 148 times for input10.txt
     }
     
