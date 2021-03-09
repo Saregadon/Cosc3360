@@ -133,7 +133,7 @@ int main()
     bool disk = true; //true means ready //false means busy
     bool core = true; //true means ready //false means busy
     bool spooler = true; //true means ready //false means busy
-    bool terminate = true; //true means a job is terminating
+    bool terminate = false; //true means a job is terminating
 
     //counter for expected time finish
     int time_taken = 0;
@@ -186,7 +186,7 @@ int main()
 
             if(terminate == true) print(time_taken, jobID, core, disk, spooler, terminate);
             if(jobcounter > jobID && jobcounter > 1 && jobID > 1) terminate = true;
-            
+
             jobID = vecargument[keyword_iteration];
             jobnumber.push_back(vecargument[keyword_iteration]);
 
