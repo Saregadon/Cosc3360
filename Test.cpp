@@ -172,7 +172,7 @@ int main()
 
     int MPL;
     string filler;
-    cin>>filler>>MPL;
+    cin >> filler >> MPL;
     cout << MPL;
     while(cin >> keyword >> argument)
     {
