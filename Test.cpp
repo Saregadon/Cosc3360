@@ -4,7 +4,6 @@
 //Program evaluates job queues and implements a FIFO basis of a waiting list for jobs
 
 #include <iostream>
-#include <iomanip>
 #include <string>
 #include <queue>
 #include <vector>
@@ -110,6 +109,22 @@ void print(int completedtime, int i, bool& core, bool& disk, bool& spooler, bool
     terminate = false;
 }
 
+int maxRowLength(vector<vector<pair<string,int>>> v){
+    vector<int> temp;
+    for(auto i:v)
+        temp.push_back(i.size());
+    
+    int max = 0;
+    for(int i:temp)
+        if(max<i)
+            max=i;
+    return max;
+}
+
+bool procDone(vector<vector<pair<string,int>>> v, vector<int> rowIt,int row){
+    return rowIt[row]>=v[row].size();
+}
+
 int main()
 {
     //head node is the 0th node when starting
@@ -118,10 +133,14 @@ int main()
     //linecounter = jobstarting number && linecounter = jobending number
     //linecounter* head;
 
-    vector<string> veckeyword; //keyword
-    vector<int> vecargument; //argument
-    vector<int> jobnumber; //iterates anytime a new job is issued
-    vector<int> expectedtimeforjob; //pushes expected time for each new job
+    vector<vector<pair<string,int>>> processes;
+
+    vector<int> currentIterationofeachrow(processes.size());
+
+    //vector<string> veckeyword; //keyword
+    //vector<int> vecargument; //argument
+    //vector<int> jobnumber; //iterates anytime a new job is issued
+    //vector<int> expectedtimeforjob; //pushes expected time for each new job
 
     //vector holders to find if we have something in the core or not
     vector<int> Disk_queue;
@@ -151,86 +170,111 @@ int main()
     int corecounter = 0;
     int core_use = 0;
 
+    int MPL;
+    string filler;
+    cin>>filler>>MPL;
+    cout << MPL;
     while(cin >> keyword >> argument)
     {
+        pair<string,int> newaddtion(keyword,stoi(argument));
         //cout << keyword << argument << endl;
         //addnode(head, keyword, argument);
-        veckeyword.push_back(keyword);
-        int hold = stoi(argument);
-        vecargument.push_back(hold);
+        //veckeyword.push_back(keyword);
+        //int hold = stoi(argument);
+        //vecargument.push_back(stoi(argument));
+
+        if(keyword == "JOB")
+        {
+            vector<pair<string,int>> newjob;
+            newjob.push_back(newaddtion);
+            processes.push_back(newjob);
+        }
+        else
+        {
+            processes[processes.size()-1].push_back(newaddtion);
+        }
     }
     int bscounter = 0;
     cout << "/////////////////////////////////////" << endl;
 
-    for(int keyword_iteration = 0; keyword_iteration < veckeyword.size(); keyword_iteration++) //keyword_iteration == i
-    {
-        //equation start
-        //cout << veckeyword[keyword_iteration] + " ";
-        //cout << vecargument[keyword_iteration];
-        //cout << endl;
-        //this works^
+    int maxLength = maxRowLength(processes);
 
-        if(veckeyword[keyword_iteration] == "PRINT")
+    while(true){
+        for(int keyword_iteration = jobcounter; keyword_iteration < jobcounter+MPL && jobcounter+MPL<=processes.size(); keyword_iteration++) //keyword_iteration == i
         {
-            spooler_request(vecargument[keyword_iteration], jobID, Spooler_queue, time_taken, spooler);
-        }
-        else if(veckeyword[keyword_iteration] == "CORE")
-        {
-            corecounter++;
-            core_request(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core, core_use);
-        }
-        else if(veckeyword[keyword_iteration] == "DISK")
-        {
-            diskcounter++;
-            disk_request(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk);
-        }
-        else if(veckeyword[keyword_iteration] == "JOB") //takes in the job #
-        {   
-            jobcounter++;
+            //equation start
+            //cout << veckeyword[keyword_iteration] + " ";
+            //cout << vecargument[keyword_iteration];
+            //cout << endl;
+            //this works^
 
-            if(terminate == true) print(time_taken, jobID, core, disk, spooler, terminate);// if(jobList.empty() { break;} // IMPLEMENT THIS
-            if(jobcounter > jobID) terminate = true;                                       // else {jobList.pop();}        // IMPLEMENT THIS
-            if(jobcounter > 1) terminate = true;
+            if(procDone(processes,currentIterationofeachrow,keyword_iteration)){//this job es done
+                jobcounter++;
+                
+            }
 
-            jobID = vecargument[keyword_iteration];
-            jobnumber.push_back(vecargument[keyword_iteration]);
+            string processName = processes[keyword_iteration][currentIterationofeachrow[keyword_iteration]].first;
+            int number = processes[keyword_iteration][currentIterationofeachrow[keyword_iteration]].second;
 
-            cout << endl << endl;
-            cout << "Job " << jobID << " is fetched at time " << time_taken << " ms" << endl;
-            cout << "Job Table: " << endl;
-            cout << "There are no active jobs. " << endl << endl;
 
-            /*int time_complexity_iteration = keyword_iteration;
-            while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
+            if(processName == "PRINT")
             {
-                time_taken_for_all += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
-                //cout << time_taken_for_all << " ";
-                time_complexity_iteration++;
-                if(veckeyword[time_complexity_iteration] == "JOB")
-                {
-                    cout << time_taken_for_all << " ";
-                    expectedtimeforjob.push_back(time_taken_for_all); //giving an expected time completion for each new job
-                }
-            }*/
-        }
+                spooler_request(number, jobID, Spooler_queue, time_taken, spooler);
+            }
+            else if(processName == "CORE")
+            {
+                corecounter++;
+                core_request(number, jobID, Core_queue, time_taken, core, core_use);
+            }
+            else if(processName == "DISK")
+            {
+                diskcounter++;
+                disk_request(number, jobID, Disk_queue, time_taken, disk);
+            }
+            else if(processName == "JOB") //takes in the job #
+            {
 
-        if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, time_taken, spooler) == false); //must set to be true
-        if (core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core) == false); //must set to be true
-        if (disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk) == false); //must set to be true
-        //for all 3 of these, implenet a jobqueue that pops when the releases are called, and pushed when the requests are called
-        //cout << bscounter++ << endl; //loops through 148 times for input10.txt
+                jobID = vecargument[keyword_iteration];
+                //jobnumber.push_back(vecargument[keyword_iteration]);
+
+                cout << endl << endl;
+                cout << "Job " << jobID << " is fetched at time " << time_taken << " ms" << endl;
+                cout << "Job Table: " << endl;
+                cout << "There are no active jobs. " << endl << endl;
+
+                /*int time_complexity_iteration = keyword_iteration;
+                while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
+                {
+                    time_taken_for_all += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
+                    //cout << time_taken_for_all << " ";
+                    time_complexity_iteration++;
+                    if(veckeyword[time_complexity_iteration] == "JOB")
+                    {
+                        cout << time_taken_for_all << " ";
+                        expectedtimeforjob.push_back(time_taken_for_all); //giving an expected time completion for each new job
+                    }
+                }*/
+            }
+
+            if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, time_taken, spooler) == false); //must set to be true
+            if (core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core) == false); //must set to be true
+            if (disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk) == false); //must set to be true
+            //for all 3 of these, implenet a jobqueue that pops when the releases are called, and pushed when the requests are called
+            //cout << bscounter++ << endl; //loops through 148 times for input10.txt
+        }
     }
     
     cout << endl;
 
     float coresadded = 0;
 
-    cout << setprecision(3);
     cout << "SUMMARY:" << endl;
-    cout << "Total elapsed time: " << time_taken << " ms" << endl;
+    cout << "Totaly elapsed time: " << time_taken << " ms" << endl;
     cout << "Number of jobs that completed: " << jobID << endl;
     cout << "Total number of disk access: " << diskcounter << endl;
-    cout << "CPU utilization: " << (coresadded = (float)(core_use)/(float)(time_taken)) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
+    cout << "CPU utilization: ";
+    printf("%.3f",(float)(core_use)/(float)(time_taken));
+    cout << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
                                     //maybe just use (float coresadded = coreutilization/expectedtimeforjob[i];)
 
     return 0;
