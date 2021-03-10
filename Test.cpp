@@ -4,6 +4,7 @@
 //Program evaluates job queues and implements a FIFO basis of a waiting list for jobs
 
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <queue>
 #include <vector>
@@ -224,11 +225,12 @@ int main()
 
     float coresadded = 0;
 
+    cout << setprecision(3);
     cout << "SUMMARY:" << endl;
-    cout << "Totaly elapsed time: " << time_taken << " ms" << endl;
+    cout << "Total elapsed time: " << time_taken << " ms" << endl;
     cout << "Number of jobs that completed: " << jobID << endl;
     cout << "Total number of disk access: " << diskcounter << endl;
-    cout << "CPU utilization: " << (coresadded = (float)(corecounter)/(float)(core_use)) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
+    cout << "CPU utilization: " << (coresadded = (float)(core_use)/(float)(time_taken)) << endl; //add up entire elapsed time and divide core times added by the entireelapsed time
                                     //maybe just use (float coresadded = coreutilization/expectedtimeforjob[i];)
 
     return 0;
