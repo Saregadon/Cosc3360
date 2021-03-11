@@ -267,9 +267,9 @@ int main()
                 print(time_taken, current_job+1,sum,Core_queue,Spooler_queue,Disk_queue,JobTimes);
             }
 
-            if(jobStatus(current_job+1,Core_queue,Spooler_queue,Disk_queue,JobTimes) == 0 )
+            if(jobStatus(current_job+1,Core_queue,Spooler_queue,Disk_queue,JobTimes) == 0)
             {
-
+                
 
 
             }
@@ -308,40 +308,35 @@ int main()
                     if(JobTimes[i]!=-1)
                         flag = 1;
                 }
-                if(flag == 0){
+                if(flag == 0)
+                {
                     cout << "There are no active jobs."<<endl;
-                }else{
-                    for(int i = 0;i < processes.size() ; i++){
+                }
+                else
+                {
+                    for(int i = 0;i < processes.size() ; i++)
+                    {
                         int thisjobstatus = jobStatus(i,Core_queue,Spooler_queue,Disk_queue,JobTimes);
-                        if(thisjobstatus != -1){
+                        if(thisjobstatus != -1)
+                        {
                             cout << "Job "<<i+1;
-                            if(thisjobstatus == 1){
+                            if(thisjobstatus == 1)
+                            {
                                 cout<<" is BLOCKED."<<endl;
-                            }else if (thisjobstatus == 3){
+                            }
+                            else if (thisjobstatus == 3)
+                            {
                                 cout << " is RUNNING."<<endl;
-                            }else{
+                            }
+                            else
+                            {
                                 cout << " is READY."<<endl;
                             }
                         }
                     }
                 }           
 
-
                 JobTimes[jobID-1] = 0;
-                
-
-                /*int time_complexity_iteration = current_job;
-                while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
-                {
-                    time_taken_for_all += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
-                    //cout << time_taken_for_all << " ";
-                    time_complexity_iteration++;
-                    if(veckeyword[time_complexity_iteration] == "JOB")
-                    {
-                        cout << time_taken_for_all << " ";
-                        expectedtimeforjob.push_back(time_taken_for_all); //giving an expected time completion for each new job
-                    }
-                }*/
             }
 
             if (spooler_release(processes[current_job][currentIterationofeachrow[current_job]].second, jobID, Spooler_queue, time_taken, spooler,JobTimes) == false); //must set to be true
@@ -358,7 +353,7 @@ int main()
                         
                 time_taken+=minval;
 
-                for(int i = 0; i<JobTimes.size(); i++)
+                for(int i = 0; i < JobTimes.size(); i++)
                     JobTimes[i]-=minval;
 
                 currentIterationofeachrow[current_job]++;
