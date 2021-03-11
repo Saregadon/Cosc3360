@@ -113,35 +113,6 @@ bool spooler_release(int how_long, int jobID, vector<int>& Squeue, int &current_
     //process next job request for job jobID
 } //spooler_release
 
-void print(int completedtime, int terminatedJob, int numofJobsproccing,vector<int> CQ, vector<int> SQ, vector<int> DQ,vector<int>& jobTimes) //i poses as the job number
-{
-    
-    cout << endl;
-    cout << "Job " << terminatedJob << " terminates at time " << completedtime << " ms." << endl;
-    cout << "Job Table:" << endl;
-    cout << "Job " << terminatedJob << " is TERMINATED." << endl;
-    jobTimes[terminatedJob-1] = -1;
-
-    for(int i = terminatedJob;i < numofJobsproccing ; i++)
-    {
-        int thisjobstatus = jobStatus(i,CQ,SQ,DQ,jobTimes);
-        cout << "Job "<<i+1;
-        if(thisjobstatus == 1)
-        {
-            cout<<" is BLOCKED."<<endl;
-        }
-        else if (thisjobstatus == 3)
-        {
-            cout << " is RUNNING."<<endl;
-        }
-        else
-        {
-            cout << " is READY."<<endl;
-        }
-    }
-    
-}
-
 int maxRowLength(vector<vector<pair<string,int>>> proc){
     vector<int> temp;
     for(auto i:proc)
@@ -177,6 +148,35 @@ int jobStatus(int jobID, vector<int> CQ, vector<int> SQ, vector<int> DQ,vector<i
         return 3; // running
 
     return 0; // ready
+}
+
+void print(int completedtime, int terminatedJob, int numofJobsproccing,vector<int> CQ, vector<int> SQ, vector<int> DQ,vector<int>& jobTimes) //i poses as the job number
+{
+    
+    cout << endl;
+    cout << "Job " << terminatedJob << " terminates at time " << completedtime << " ms." << endl;
+    cout << "Job Table:" << endl;
+    cout << "Job " << terminatedJob << " is TERMINATED." << endl;
+    jobTimes[terminatedJob-1] = -1;
+
+    for(int i = terminatedJob;i < numofJobsproccing ; i++)
+    {
+        int thisjobstatus = jobStatus(i,CQ,SQ,DQ,jobTimes);
+        cout << "Job "<<i+1;
+        if(thisjobstatus == 1)
+        {
+            cout<<" is BLOCKED."<<endl;
+        }
+        else if (thisjobstatus == 3)
+        {
+            cout << " is RUNNING."<<endl;
+        }
+        else
+        {
+            cout << " is READY."<<endl;
+        }
+    }
+    
 }
 
 int main()
