@@ -39,6 +39,8 @@ bool core_release(int how_long, int jobID, vector<int>& Cqueue, int &current_tim
         //current_time = current_time + how_long; //how_long == jobID
         core = true;
         cout << "-- Job " << jobID << " will release a core at time " << current_time+how_long << " ms." << endl;
+        if(how_long == 0)
+            cout << "-- Job " <<jobID <<" immediately returns to the ready queue." << endl;
         jobTimes[jobID-1] = how_long;
         return true;
     }
@@ -70,7 +72,10 @@ bool disk_release(int how_long, int jobID, vector<int>& Dqueue, int &current_tim
         //current_time = current_time + how_long; //how_long == jobID
         disk = true;
         cout << "-- Job " << jobID << " will release the disk at time " << current_time << " ms." << endl;
+        if(how_long == 0)
+            cout << "-- Job " << jobID << " immediately returns to the ready queue." << endl;
         jobTimes[jobID-1] = how_long;
+        
         return true;
         
     }
@@ -105,6 +110,8 @@ bool spooler_release(int how_long, int jobID, vector<int>& Squeue, int &current_
         cout << "-- Give spooler to process "<< jobID <<" from the spooler queue."<<endl;
         cout << "-- Spooler queue now contains " << Squeue.size() << " job(s) waiting for the spooler."<<endl;
         cout << "-- Job " << jobID << " will release the spooler at time " << current_time+how_long << " ms." << endl;
+        if(how_long == 0)
+            cout << "-- Job " <<jobID <<" immediately returns to the ready queue." << endl;
 
         jobTimes[jobID-1] = how_long;
 
@@ -133,6 +140,8 @@ int jobStatus(int jobID, vector<int> CQ, vector<int> SQ, vector<int> DQ,vector<i
 
     if(jobTimes[jobID]==-1)
         return -1;
+    if(jobTimes[jobID]==-1)
+        return -2;
 
     for(int c: CQ)
         if(c == jobID)
@@ -150,16 +159,16 @@ int jobStatus(int jobID, vector<int> CQ, vector<int> SQ, vector<int> DQ,vector<i
     return 0; // ready
 }
 
-void print(int completedtime, int terminatedJob, int numofJobsproccing,vector<int> CQ, vector<int> SQ, vector<int> DQ,vector<int>& jobTimes) //i poses as the job number
+void printTerminate(int completedtime, int terminatedJob, int numofJobsproccing,vector<int> CQ, vector<int> SQ, vector<int> DQ,vector<int>& jobTimes) //i poses as the job number
 {
     
     cout << endl;
     cout << "Job " << terminatedJob << " terminates at time " << completedtime << " ms." << endl;
     cout << "Job Table:" << endl;
-    cout << "Job " << terminatedJob << " is TERMINATED." << endl;
+    cout << "Job "<<terminatedJob << " is TERMINATED."<<endl;
     jobTimes[terminatedJob-1] = -1;
-
-    for(int i = terminatedJob;i < numofJobsproccing ; i++)
+    
+    for(int i = terminatedJob;i < numofJobsproccing; i++)
     {
         int thisjobstatus = jobStatus(i,CQ,SQ,DQ,jobTimes);
         cout << "Job "<<i+1;
@@ -179,6 +188,30 @@ void print(int completedtime, int terminatedJob, int numofJobsproccing,vector<in
     
 }
 
+bool done(vector<int> JobTimes)
+{
+    for(int i:JobTimes)
+    {
+        if(i!=-2) return false;
+    }
+
+    return true;
+}
+
+int nextAvailable(vector<int> jobTimes, int MPL)
+{
+    int count = 0;
+    for(int i:jobTimes)
+    {
+        if(i >= 0)
+        {
+            count++;
+        }
+    }
+
+    return count < MPL;
+}
+
 int main()
 {
     //head node is the 0th node when starting
@@ -188,8 +221,6 @@ int main()
     //linecounter* head;
 
     vector<vector<pair<string,int>>> processes;
-
-    vector<int> currentIterationofeachrow(processes.size());
 
     //vector<string> veckeyword; //keyword
     //vector<int> vecargument; //argument
@@ -226,7 +257,6 @@ int main()
     int MPL;
     string filler;
     cin>>filler>>MPL;
-    cout << MPL;
 
     while(cin >> keyword >> argument)
     {
@@ -248,118 +278,122 @@ int main()
             processes[processes.size()-1].push_back(addthis);
         }
     }
-
     int maxLength = maxRowLength(processes);
 
+    vector<int> currentIterationofeachrow(processes.size());
     vector<int> JobTimes(processes.size(),-1);
 
-    while(true)
+    int current_job = 0;
+
+    while(!done(JobTimes))
     {
-        for(int current_job = jobcounter; current_job < jobcounter+MPL && current_job<=processes.size(); current_job++) //current_job == i
+        if(!procDone(processes,currentIterationofeachrow,current_job))
         {
-            if(!procDone(processes,currentIterationofeachrow,current_job))
-            {
-                int sum = 0;
-                for(int i:JobTimes)
-                    if(i != -1)
-                        sum++;
+            int sum = 0;
+            for(int i:JobTimes)
+                if(i != -1)
+                    sum++;
+            
+            printTerminate(time_taken, current_job+1,sum,Core_queue,Spooler_queue,Disk_queue,JobTimes);
+            break;
+        }
 
-                print(time_taken, current_job+1,sum,Core_queue,Spooler_queue,Disk_queue,JobTimes);
+        if(nextAvailable(JobTimes, MPL))
+        {
+            current_job = jobcounter;
+        }
+
+        string processName = processes[current_job][currentIterationofeachrow[current_job]].first;
+        int number = processes[current_job][currentIterationofeachrow[current_job]].second;
+
+        if(processName == "PRINT")
+        {
+            
+            spooler_request(number, jobID, Spooler_queue, time_taken, spooler);
+        }
+        else if(processName == "CORE")
+        {
+            corecounter++;
+            core_request(number, jobID, Core_queue, time_taken, core, core_use);
+        }
+        else if(processName == "DISK")
+        {
+            diskcounter++;
+            disk_request(number, jobID, Disk_queue, time_taken, disk);
+        }
+        else if(processName == "JOB") //takes in the job #
+        {
+            jobcounter++;
+            jobID = current_job+1;
+            //jobnumber.push_back(vecargument[current_job]);
+
+            cout << endl << endl;
+            cout << "Job " << jobID << " is fetched at time " << time_taken << " ms" << endl;
+            
+            cout << "Job Table: " << endl;
+            
+            bool flag = 0;
+            for(int i = 0;i<processes.size();i++)
+            {
+                if(JobTimes[i]!=-1)
+                    flag = 1;
             }
 
-            if(jobStatus(current_job+1,Core_queue,Spooler_queue,Disk_queue,JobTimes) == 0)
+            if(flag == 0)
             {
-                
-
-
+                cout << "There are no active jobs."<<endl;
             }
-
-            string processName = processes[current_job][currentIterationofeachrow[current_job]].first;
-            int number = processes[current_job][currentIterationofeachrow[current_job]].second;
-
-
-            if(processName == "PRINT")
+            else
             {
-                spooler_request(number, jobID, Spooler_queue, time_taken, spooler);
-            }
-            else if(processName == "CORE")
-            {
-                corecounter++;
-                core_request(number, jobID, Core_queue, time_taken, core, core_use);
-            }
-            else if(processName == "DISK")
-            {
-                diskcounter++;
-                disk_request(number, jobID, Disk_queue, time_taken, disk);
-            }
-            else if(processName == "JOB") //takes in the job #
-            {
-
-                jobID = current_job+1;
-                //jobnumber.push_back(vecargument[current_job]);
-
-                cout << endl << endl;
-                cout << "Job " << jobID << " is fetched at time " << time_taken << " ms" << endl;
-                
-                cout << "Job Table: " << endl;
-                
-                bool flag = 0;
-                for(int i = 0;i<processes.size();i++){
-                    if(JobTimes[i]!=-1)
-                        flag = 1;
-                }
-                if(flag == 0)
+                for(int i = 0;i < processes.size() ; i++)
                 {
-                    cout << "There are no active jobs."<<endl;
-                }
-                else
-                {
-                    for(int i = 0;i < processes.size() ; i++)
+                    int thisjobstatus = jobStatus(i,Core_queue,Spooler_queue,Disk_queue,JobTimes);
+                    if(thisjobstatus != -1)
                     {
-                        int thisjobstatus = jobStatus(i,Core_queue,Spooler_queue,Disk_queue,JobTimes);
-                        if(thisjobstatus != -1)
+                        cout << "Job "<<i+1;
+                        if(thisjobstatus == 1)
                         {
-                            cout << "Job "<<i+1;
-                            if(thisjobstatus == 1)
-                            {
-                                cout<<" is BLOCKED."<<endl;
-                            }
-                            else if (thisjobstatus == 3)
-                            {
-                                cout << " is RUNNING."<<endl;
-                            }
-                            else
-                            {
-                                cout << " is READY."<<endl;
-                            }
+                            cout<<" is BLOCKED."<<endl;
+                        }
+                        else if (thisjobstatus == 3)
+                        {
+                            cout << " is RUNNING."<<endl;
+                        }
+                        else
+                        {
+                            cout << " is READY."<<endl;
                         }
                     }
-                }           
+                }
+            }           
 
-                JobTimes[jobID-1] = 0;
-            }
 
-            if (spooler_release(processes[current_job][currentIterationofeachrow[current_job]].second, jobID, Spooler_queue, time_taken, spooler,JobTimes) == false); //must set to be true
-            if (core_release(processes[current_job][currentIterationofeachrow[current_job]].second, jobID, Core_queue, time_taken, core,JobTimes) == false); //must set to be true
-            if (disk_release(processes[current_job][currentIterationofeachrow[current_job]].second, jobID, Disk_queue, time_taken, disk,JobTimes) == false); //must set to be true
-            //for all 3 of these, implenet a jobqueue that pops when the releases are called, and pushed when the requests are called
-            //cout << bscounter++ << endl; //loops through 148 times for input10.txt
-                int min = 0;
-                for(int i = 1; i<JobTimes.size(); i++)
-                    if(JobTimes[i]<JobTimes[min])
-                        min = i;
+        JobTimes[current_job] = 0;
+        }
+
+        if (spooler_release(processes[current_job][currentIterationofeachrow[current_job]].second, jobID, Spooler_queue, time_taken, spooler,JobTimes) == false); //must set to be true
+        if (core_release(processes[current_job][currentIterationofeachrow[current_job]].second, jobID, Core_queue, time_taken, core,JobTimes) == false); //must set to be true
+        if (disk_release(processes[current_job][currentIterationofeachrow[current_job]].second, jobID, Disk_queue, time_taken, disk,JobTimes) == false); //must set to be true
+        //for all 3 of these, implenet a jobqueue that pops when the releases are called, and pushed when the requests are called
+        //cout << bscounter++ << endl; //loops through 148 times for input10.txt
+        int min = 0;
+        for(int i = 1; i<JobTimes.size(); i++)
+            if(JobTimes[i]<JobTimes[min])
+                min = i;
+        
+        int minval = JobTimes[min];
                 
-                int minval = JobTimes[min];
-                        
-                time_taken+=minval;
+        time_taken+=minval;
 
-                for(int i = 0; i < JobTimes.size(); i++)
-                    JobTimes[i]-=minval;
+        for(int i = 0; i<JobTimes.size(); i++)
+            if(JobTimes[i]>0)
+                JobTimes[i]-=minval;
 
-                currentIterationofeachrow[current_job]++;
-            }
+        current_job = min;
+        currentIterationofeachrow[min]++;
+    }
 
-        }    
+    
     cout << endl;
 
     float coresadded = 0;
