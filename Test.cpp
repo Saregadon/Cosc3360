@@ -4,12 +4,10 @@
 //Program evaluates job queues and implements a FIFO basis of a waiting list for jobs
 
 #include <iostream>
-#include <string>
-#include <queue>
 #include <vector>
-#include <numeric>
 
 using namespace std;
+
 
 void core_request(int how_long, int jobID, vector<int>& Cqueue, int &current_time, bool &core, int& core_use)
 {
@@ -18,22 +16,30 @@ void core_request(int how_long, int jobID, vector<int>& Cqueue, int &current_tim
     {
         core = false; //false == busy
         //schedule CORE completion at time
-        Cqueue.push_back(1);
+        
         cout << "-- Job " << jobID << " requests a core at time " << current_time << " ms for " << how_long << " ms." << endl;
-        current_time = current_time + how_long;
+        //current_time = current_time + how_long;
+        core_use += how_long;
+    }else{
+        Cqueue.push_back(jobID);
+        cout << "-- Job " << jobID << " requests a core at time " << current_time << " ms for " << how_long << " ms." << endl;
+        cout << "-- Job "<< jobID << " must wait for a core."<<endl;
+        cout << "-- Ready queue now contains " << Cqueue.size() << " job(s) waiting for a core."<<endl;
+        //current_time = current_time + how_long;
         core_use += how_long;
     }
 } //core_request
 
 //change to int to return completion time?
-bool core_release(int how_long, int jobID, vector<int>& Cqueue, int &current_time, bool &core)
+bool core_release(int how_long, int jobID, vector<int>& Cqueue, int &current_time, bool &core, vector<int>& jobTimes)
 {
     if(!Cqueue.empty())
     {
-        Cqueue.pop_back();
+        Cqueue.erase(Cqueue.begin());
         //current_time = current_time + how_long; //how_long == jobID
         core = true;
-        cout << "-- Job " << jobID << " will release a core at time " << current_time << " ms." << endl;
+        cout << "-- Job " << jobID << " will release a core at time " << current_time+how_long << " ms." << endl;
+        jobTimes[jobID-1] = how_long;
         return true;
     }
     //process next job request for job jobID
@@ -44,22 +50,29 @@ void disk_request(int how_long, int jobID, vector<int>& Dqueue, int &current_tim
     if(disk == true) //true == free
     {
         disk = false; //false == busy
-        //schedule DISK completion event at time
-        Dqueue.push_back(1);
+        //schedule DISK completion event at time        
         cout << "-- Job " << jobID << " requests disk access at time " << current_time << " ms for " << how_long << " ms." << endl;
-        current_time = current_time + how_long;
+        //current_time = current_time + how_long;
+    }else{
+        Dqueue.push_back(jobID);
+        cout << "-- Job " << jobID << " requests disk access at time " << current_time << " ms for " << how_long << " ms." << endl;
+        cout << "-- Job "<< jobID << " must wait for the disk."<<endl;
+        cout << "-- Ready queue now contains " << Dqueue.size() << " job(s) waiting for the disk."<<endl;
+        //current_time = current_time + how_long;
     }
 } // disk_request
 
-bool disk_release(int how_long, int jobID, vector<int>& Dqueue, int &current_time, bool &disk)
+bool disk_release(int how_long, int jobID, vector<int>& Dqueue, int &current_time, bool &disk, vector<int>& jobTimes)
 {
     if(!Dqueue.empty())
     {
-        Dqueue.pop_back();
+        Dqueue.erase(Dqueue.begin());
         //current_time = current_time + how_long; //how_long == jobID
         disk = true;
         cout << "-- Job " << jobID << " will release the disk at time " << current_time << " ms." << endl;
+        jobTimes[jobID-1] = how_long;
         return true;
+        
     }
     //process next job request for job jobID
 } //disk_release
@@ -70,48 +83,68 @@ void spooler_request(int how_long, int jobID, vector<int>& Squeue, int &current_
     {
         spooler = false;
         //schedule SPOOLER completion event at time
-        Squeue.push_back(1);
+        
         cout << "-- Job " << jobID << " requests spooler access at time " << current_time << " ms for " << how_long << " ms." << endl;
-        current_time = current_time + how_long;
+        //current_time = current_time + how_long;
+    }else{
+        Squeue.push_back(jobID);
+        cout << "-- Job " << jobID << " requests spooler access at time " << current_time << " ms for " << how_long << " ms." << endl;
+        cout << "-- Job "<< jobID << " must wait for the spooler."<<endl;
+        cout << "-- Spooler queue now contains " << Squeue.size() << " job(s) waiting for the spooler."<<endl;
+        
     }
 } //spooler_request
 
-bool spooler_release(int how_long, int jobID, vector<int>& Squeue, int &current_time, bool &spooler)
+bool spooler_release(int how_long, int jobID, vector<int>& Squeue, int &current_time, bool &spooler, vector<int>& jobTimes)
 {
     if(!Squeue.empty())
     {
-        Squeue.pop_back();
+        Squeue.erase(Squeue.begin());
         //current_time = current_time + how_long;
         spooler = true;
-        cout << "-- Job " << jobID << " will release the spooler at time " << current_time << " ms." << endl;
+        cout << "-- Give spooler to process "<< jobID <<" from the spooler queue."<<endl;
+        cout << "-- Spooler queue now contains " << Squeue.size() << " job(s) waiting for the spooler."<<endl;
+        cout << "-- Job " << jobID << " will release the spooler at time " << current_time+how_long << " ms." << endl;
+
+        jobTimes[jobID-1] = how_long;
+
         return true;
     }
     //process next job request for job jobID
 } //spooler_release
 
-void print(int completedtime, int i, bool& core, bool& disk, bool& spooler, bool& terminate) //i poses as the job number
+void print(int completedtime, int terminatedJob, int numofJobsproccing,vector<int> CQ, vector<int> SQ, vector<int> DQ,vector<int>& jobTimes) //i poses as the job number
 {
+    
     cout << endl;
-    cout << "Job " << i << " terminates at time " << completedtime << " ms." << endl;
+    cout << "Job " << terminatedJob << " terminates at time " << completedtime << " ms." << endl;
     cout << "Job Table:" << endl;
-    if(core == false && disk == false && spooler == false) //must find out how to see if job is completed or not for function.
+    cout << "Job " << terminatedJob << " is TERMINATED." << endl;
+    jobTimes[terminatedJob-1] = -1;
+
+    for(int i = terminatedJob;i < numofJobsproccing ; i++)
     {
-        cout << "Job " << i << " is RUNNING" << endl;
+        int thisjobstatus = jobStatus(i,CQ,SQ,DQ,jobTimes);
+        cout << "Job "<<i+1;
+        if(thisjobstatus == 1)
+        {
+            cout<<" is BLOCKED."<<endl;
+        }
+        else if (thisjobstatus == 3)
+        {
+            cout << " is RUNNING."<<endl;
+        }
+        else
+        {
+            cout << " is READY."<<endl;
+        }
     }
-    else if(terminate == true)
-    {
-        cout << "Job " << i << " is TERMINATED." << endl;
-    }
-    else //if job is completed
-    {
-        cout << "There are no active jobs" << endl;
-    }
-    terminate = false;
+    
 }
 
-int maxRowLength(vector<vector<pair<string,int>>> v){
+int maxRowLength(vector<vector<pair<string,int>>> proc){
     vector<int> temp;
-    for(auto i:v)
+    for(auto i:proc)
         temp.push_back(i.size());
     
     int max = 0;
@@ -121,8 +154,29 @@ int maxRowLength(vector<vector<pair<string,int>>> v){
     return max;
 }
 
-bool procDone(vector<vector<pair<string,int>>> v, vector<int> rowIt,int row){
-    return rowIt[row]>=v[row].size();
+bool procDone(vector<vector<pair<string,int>>> proc, vector<int> rowIt,int row){
+    return rowIt[row]>=proc[row].size();
+}
+
+int jobStatus(int jobID, vector<int> CQ, vector<int> SQ, vector<int> DQ,vector<int> jobTimes){
+
+    if(jobTimes[jobID]==-1)
+        return -1;
+
+    for(int c: CQ)
+        if(c == jobID)
+            return 1;
+    for(int s: SQ)
+        if(s == jobID)
+            return 1;
+    for(int d:DQ)
+        if(d == jobID)
+            return 1;
+
+    if(jobTimes[jobID-1]!=0)
+        return 3; // running
+
+    return 0; // ready
 }
 
 int main()
@@ -159,7 +213,6 @@ int main()
 
     //counter for expected time finish
     int time_taken = 0;
-    int time_taken_for_all = 0;
 
     //holds job number
     int jobID = 1; //always start at job # 1
@@ -172,11 +225,12 @@ int main()
 
     int MPL;
     string filler;
-    cin >> filler >> MPL;
+    cin>>filler>>MPL;
     cout << MPL;
+
     while(cin >> keyword >> argument)
     {
-        pair<string,int> newaddtion(keyword,stoi(argument));
+        pair<string,int> addthis(keyword,stoi(argument));
         //cout << keyword << argument << endl;
         //addnode(head, keyword, argument);
         //veckeyword.push_back(keyword);
@@ -186,35 +240,42 @@ int main()
         if(keyword == "JOB")
         {
             vector<pair<string,int>> newjob;
-            newjob.push_back(newaddtion);
+            newjob.push_back(addthis);
             processes.push_back(newjob);
         }
         else
         {
-            processes[processes.size()-1].push_back(newaddtion);
+            processes[processes.size()-1].push_back(addthis);
         }
     }
-    int bscounter = 0;
-    cout << "/////////////////////////////////////" << endl;
 
     int maxLength = maxRowLength(processes);
 
-    while(true){
-        for(int keyword_iteration = jobcounter; keyword_iteration < jobcounter+MPL && jobcounter+MPL<=processes.size(); keyword_iteration++) //keyword_iteration == i
-        {
-            //equation start
-            //cout << veckeyword[keyword_iteration] + " ";
-            //cout << vecargument[keyword_iteration];
-            //cout << endl;
-            //this works^
+    vector<int> JobTimes(processes.size(),-1);
 
-            if(procDone(processes,currentIterationofeachrow,keyword_iteration)){//this job es done
-                jobcounter++;
-                
+    while(true)
+    {
+        for(int current_job = jobcounter; current_job < jobcounter+MPL && current_job<=processes.size(); current_job++) //current_job == i
+        {
+            if(!procDone(processes,currentIterationofeachrow,current_job))
+            {
+                int sum = 0;
+                for(int i:JobTimes)
+                    if(i != -1)
+                        sum++;
+
+                print(time_taken, current_job+1,sum,Core_queue,Spooler_queue,Disk_queue,JobTimes);
             }
 
-            string processName = processes[keyword_iteration][currentIterationofeachrow[keyword_iteration]].first;
-            int number = processes[keyword_iteration][currentIterationofeachrow[keyword_iteration]].second;
+            if(jobStatus(current_job+1,Core_queue,Spooler_queue,Disk_queue,JobTimes) == 0 )
+            {
+
+
+
+            }
+
+            string processName = processes[current_job][currentIterationofeachrow[current_job]].first;
+            int number = processes[current_job][currentIterationofeachrow[current_job]].second;
 
 
             if(processName == "PRINT")
@@ -234,15 +295,42 @@ int main()
             else if(processName == "JOB") //takes in the job #
             {
 
-                jobID = vecargument[keyword_iteration];
-                //jobnumber.push_back(vecargument[keyword_iteration]);
+                jobID = current_job+1;
+                //jobnumber.push_back(vecargument[current_job]);
 
                 cout << endl << endl;
                 cout << "Job " << jobID << " is fetched at time " << time_taken << " ms" << endl;
+                
                 cout << "Job Table: " << endl;
-                cout << "There are no active jobs. " << endl << endl;
+                
+                bool flag = 0;
+                for(int i = 0;i<processes.size();i++){
+                    if(JobTimes[i]!=-1)
+                        flag = 1;
+                }
+                if(flag == 0){
+                    cout << "There are no active jobs."<<endl;
+                }else{
+                    for(int i = 0;i < processes.size() ; i++){
+                        int thisjobstatus = jobStatus(i,Core_queue,Spooler_queue,Disk_queue,JobTimes);
+                        if(thisjobstatus != -1){
+                            cout << "Job "<<i+1;
+                            if(thisjobstatus == 1){
+                                cout<<" is BLOCKED."<<endl;
+                            }else if (thisjobstatus == 3){
+                                cout << " is RUNNING."<<endl;
+                            }else{
+                                cout << " is READY."<<endl;
+                            }
+                        }
+                    }
+                }           
 
-                /*int time_complexity_iteration = keyword_iteration;
+
+                JobTimes[jobID-1] = 0;
+                
+
+                /*int time_complexity_iteration = current_job;
                 while(veckeyword[time_complexity_iteration] != "JOB") // then iterates through the keywords, while at the same time ignoring the keyword JOB
                 {
                     time_taken_for_all += (vecargument[time_complexity_iteration]); //adding the arguments up until the next job
@@ -256,14 +344,27 @@ int main()
                 }*/
             }
 
-            if (spooler_release(vecargument[keyword_iteration], jobID, Spooler_queue, time_taken, spooler) == false); //must set to be true
-            if (core_release(vecargument[keyword_iteration], jobID, Core_queue, time_taken, core) == false); //must set to be true
-            if (disk_release(vecargument[keyword_iteration], jobID, Disk_queue, time_taken, disk) == false); //must set to be true
+            if (spooler_release(processes[current_job][currentIterationofeachrow[current_job]].second, jobID, Spooler_queue, time_taken, spooler,JobTimes) == false); //must set to be true
+            if (core_release(processes[current_job][currentIterationofeachrow[current_job]].second, jobID, Core_queue, time_taken, core,JobTimes) == false); //must set to be true
+            if (disk_release(processes[current_job][currentIterationofeachrow[current_job]].second, jobID, Disk_queue, time_taken, disk,JobTimes) == false); //must set to be true
             //for all 3 of these, implenet a jobqueue that pops when the releases are called, and pushed when the requests are called
             //cout << bscounter++ << endl; //loops through 148 times for input10.txt
-        }
-    }
-    
+                int min = 0;
+                for(int i = 1; i<JobTimes.size(); i++)
+                    if(JobTimes[i]<JobTimes[min])
+                        min = i;
+                
+                int minval = JobTimes[min];
+                        
+                time_taken+=minval;
+
+                for(int i = 0; i<JobTimes.size(); i++)
+                    JobTimes[i]-=minval;
+
+                currentIterationofeachrow[current_job]++;
+            }
+
+        }    
     cout << endl;
 
     float coresadded = 0;
