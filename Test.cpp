@@ -203,9 +203,14 @@ int nextAvailable(vector<int> jobTimes, int MPL)
     int count = 0;
     for(int i:jobTimes)
     {
-        if(i >= 0)
+        if(i > 0)
         {
             count++;
+        }
+
+        if(i==0)
+        {
+            return false;
         }
     }
 
@@ -295,7 +300,7 @@ int main()
                     sum++;
             
             printTerminate(time_taken, current_job+1,sum,Core_queue,Spooler_queue,Disk_queue,JobTimes);
-            break;
+            continue;
         }
 
         if(nextAvailable(JobTimes, MPL))
@@ -378,7 +383,7 @@ int main()
         //cout << bscounter++ << endl; //loops through 148 times for input10.txt
         int min = 0;
         for(int i = 1; i<JobTimes.size(); i++)
-            if(JobTimes[i]<JobTimes[min])
+            if((JobTimes[i]<JobTimes[min] && JobTimes[i]>0) || JobTimes[min] <= 0)
                 min = i;
         
         int minval = JobTimes[min];
